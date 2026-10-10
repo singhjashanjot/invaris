@@ -62,6 +62,25 @@ def validate_evidence(bundle: Mapping[str, Any], required_receipts: tuple[str, .
         if kind == "probe" and receipt.get("fresh") is not True:
             issues.append({"code": "probe_not_fresh", "item": kind, "message": "Probe receipt is not explicitly marked fresh."})
 
+    for kind in required_receipts:
+        receipt = receipt_map.get(kind)
+        if not isinstance(receipt, Mapping) or not receipt:
+            issues.append({"code": "receipt_incomplete", "item": kind, "message": f"Required {kind} receipt lacks evidence fields."})
+            continue
+        revision = receipt.get("candidate_revision", receipt.get("revision"))
+        has_revision = isinstance(revision, str) and bool(revision.strip())
+        if kind == "candidate":
+            meaningful = has_revision
+        elif kind == "probe":
+            meaningful = has_revision and type(receipt.get("fresh")) is bool
+        elif kind in {"application", "rollback"}:
+            outcome = any(type(receipt.get(field)) is bool for field in ("ok", "valid", "verified", "app_valid"))
+            meaningful = has_revision and outcome
+        else:
+            meaningful = bool(receipt)
+        if not meaningful:
+            issues.append({"code": "receipt_incomplete", "item": kind, "message": f"Required {kind} receipt lacks revision or outcome evidence."})
+
     integration_results = []
     integrations = bundle.get("integrations", [])
     values = integrations.items() if isinstance(integrations, Mapping) else ((str(item.get("name", "unknown")), item) for item in integrations if isinstance(item, Mapping))

@@ -366,7 +366,16 @@ class Agent:
 
     @staticmethod
     def _claimed_status(content: str) -> ResultStatus | None:
-        match = re.match(r"\s*(VERIFIED|BLOCKED|UNVERIFIED|FAILED)\b", content, re.I)
+        lines = content.splitlines()
+        while lines and (not lines[0].strip() or re.fullmatch(r"[ \t]*(?:-{3,}|\*{3,}|_{3,})[ \t]*", lines[0])):
+            lines.pop(0)
+        if not lines:
+            return None
+        first_line = re.sub(r"^ {0,3}(?:#{1,6}[ \t]+)?", "", lines[0])
+        status_pattern = r"(VERIFIED|BLOCKED|UNVERIFIED|FAILED)"
+        match = re.match(rf"\*\*{status_pattern}:?\*\*:?(?=[ \t]|$)", first_line, re.I)
+        if not match:
+            match = re.match(rf"{status_pattern}\b:?(?=[ \t]|$)", first_line, re.I)
         return ResultStatus(match.group(1).upper()) if match else None
 
     @staticmethod

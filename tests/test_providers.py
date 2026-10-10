@@ -209,8 +209,13 @@ class ProviderTests(unittest.TestCase):
             OpenAICompatibleProvider("m", base_url="http://api.example.test")
         with self.assertRaises(ProviderConfigurationError):
             OpenAICompatibleProvider("m", base_url="https://user:secret@example.test")
+        for url in ("https://api.example.test/v1?api_key=secret", "https://api.example.test/v1?"):
+            with self.subTest(url=url), self.assertRaises(ProviderConfigurationError):
+                OpenAICompatibleProvider("m", base_url=url)
         provider = OpenAICompatibleProvider("m", base_url="http://127.0.0.1:8000/v1")
         self.assertEqual(provider._base_url, "http://127.0.0.1:8000/v1")
+        provider = OpenAICompatibleProvider("m", base_url="https://api.example.test/v1")
+        self.assertEqual(provider._base_url, "https://api.example.test/v1")
 
     def test_base_url_reads_openai_base_url(self):
         with patch.dict("os.environ", {"OPENAI_BASE_URL": "https://api.example.test/v1"}, clear=True):

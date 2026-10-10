@@ -10,6 +10,7 @@ services:
     volumes:
       - state:/work
       - pki:/pki
+      - trust:/trust
     security_opt: ["no-new-privileges:true"]
   fixture:
     image: invaris-fixture:0.1.0
@@ -41,7 +42,7 @@ services:
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
     volumes:
-      - pki:/pki:ro
+      - trust:/pki:ro
     networks: [sandbox]
     mem_limit: 128m
     cpus: 1.0
@@ -50,7 +51,7 @@ services:
 volumes:
   state:
   pki:
+  trust:
 networks:
   sandbox:
     internal: true
-

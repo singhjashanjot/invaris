@@ -1,3 +1,5 @@
+import pytest
+
 from invaris.agent import Agent, DeterministicOfflineModel
 from invaris.contracts import AgentVersion, MigrationContract, ResultStatus
 from invaris.state import save_checkpoint
@@ -102,6 +104,64 @@ def test_blocked_claim_needs_independent_infeasibility_receipt():
     ])
     result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
     assert result.status == ResultStatus.BLOCKED
+
+
+@pytest.mark.parametrize("content, expected", [
+    ("VERIFIED: complete", ResultStatus.VERIFIED),
+    ("BLOCKED: infeasible", ResultStatus.BLOCKED),
+    ("UNVERIFIED: missing evidence", ResultStatus.UNVERIFIED),
+    ("FAILED: action failed", ResultStatus.FAILED),
+    (" BLOCKED: infeasible", ResultStatus.BLOCKED),
+    ("  VERIFIED: complete", ResultStatus.VERIFIED),
+    ("   UNVERIFIED: missing evidence", ResultStatus.UNVERIFIED),
+    ("\n---\n\n**BLOCKED:**\npolicy cannot be met", ResultStatus.BLOCKED),
+    ("### BLOCKED: unsupported policy", ResultStatus.BLOCKED),
+    ("## **FAILED:** action failed", ResultStatus.FAILED),
+    ("  ### **BLOCKED:** unsupported policy", ResultStatus.BLOCKED),
+])
+def test_claimed_status_accepts_first_line_status_forms(content, expected):
+    assert Agent._claimed_status(content) == expected
+
+
+@pytest.mark.parametrize("content", [
+    "The result is BLOCKED: infeasible",
+    "> BLOCKED: quoted claim",
+    "A heading\n\nBLOCKED: later paragraph",
+    "First paragraph\n\nVERIFIED: later paragraph",
+    "```text\nBLOCKED: code sample\n```",
+    "---\n\n\nQuoted or ordinary text before status\nBLOCKED: later line",
+    "BLOCKEDLY: not a status token",
+    ("\tBLOCKED: tab indentation"),
+    ("    BLOCKED: code indentation"),
+    ("    ### **BLOCKED:** indented heading"),
+])
+def test_claimed_status_rejects_nonleading_or_embedded_status(content):
+    assert Agent._claimed_status(content) is None
+
+
+def test_formatted_blocked_status_still_requires_infeasibility_receipt():
+    content = "\n---\n\n**BLOCKED:**\npolicy cannot be met"
+    model = DeterministicOfflineModel([
+        {"tool_calls": [{"id": "cap", "name": "inspect_capabilities", "arguments": {}}], "content": "", "usage": {}},
+        {"tool_calls": [], "content": content, "usage": {}},
+    ])
+    result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
+    assert result.status == ResultStatus.BLOCKED
+    assert result.claimed_status == ResultStatus.BLOCKED
+
+    model = DeterministicOfflineModel([{"tool_calls": [], "content": content, "usage": {}}])
+    result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
+    assert result.status == ResultStatus.UNVERIFIED
+    assert result.claimed_status == ResultStatus.BLOCKED
+
+
+def test_formatted_verified_status_without_probes_remains_unverified():
+    model = DeterministicOfflineModel([
+        {"tool_calls": [], "content": "\n---\n\n**VERIFIED:** migration complete", "usage": {}}
+    ])
+    result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
+    assert result.status == ResultStatus.UNVERIFIED
+    assert result.claimed_status == ResultStatus.VERIFIED
 
 
 def test_v2_rejects_mismatched_identity_or_config_digests():

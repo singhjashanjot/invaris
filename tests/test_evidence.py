@@ -39,6 +39,28 @@ def test_integration_claim_requires_evidence():
     assert any(issue["code"] == "integration_unsubstantiated" for issue in result["issues"])
 
 
+def test_empty_required_receipts_do_not_validate():
+    result = validate_evidence({"receipts": {kind: {} for kind in ("candidate", "probe", "application", "rollback")}})
+    assert result["valid"] is False
+    assert {issue["item"] for issue in result["issues"] if issue["code"] == "receipt_incomplete"} == {
+        "candidate", "probe", "application", "rollback",
+    }
+
+
+def test_structurally_meaningful_receipts_validate_without_claiming_authenticity():
+    result = validate_evidence({
+        "revisions": {"candidate": "c2", "baseline": "c1"},
+        "receipts": {
+            "candidate": {"revision": "c2"},
+            "probe": {"candidate_revision": "c2", "fresh": True},
+            "application": {"candidate_revision": "c2", "verified": True},
+            "rollback": {"candidate_revision": "c1", "verified": False},
+        },
+    })
+    assert result["valid"] is True
+    assert "do not establish provenance or authenticity" in result["limitations"][0]
+
+
 def test_manifest_detects_changed_and_missing_artifacts(tmp_path):
     artifact = tmp_path / "result.json"
     artifact.write_text("{}", encoding="utf-8")

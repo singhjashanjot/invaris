@@ -145,7 +145,7 @@ class SpendBudget:
 
 
 class OpenAICompatibleProvider:
-    """OpenAI Chat Completions provider with a conservative per-request spend gate."""
+    """OpenAI-compatible provider with spend gating; base URL paths must not contain credentials."""
 
     INPUT_TOKEN_OVERHEAD = 256
 
@@ -359,7 +359,7 @@ def _validate_base_url(value: str) -> None:
     try:
         parsed = urlsplit(value)
         hostname = parsed.hostname
-        if not hostname or parsed.username or parsed.password or parsed.fragment:
+        if not hostname or parsed.username or parsed.password or parsed.fragment or parsed.query or "?" in value:
             raise ValueError
         if parsed.scheme == "https":
             return

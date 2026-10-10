@@ -42,6 +42,19 @@ def _identity(fixture: DockerFixture, scenario: str) -> dict[str, str]:
     }
 
 
+def test_ca_signing_key_is_absent_from_fixture_and_probe(docker_fixture: DockerFixture) -> None:
+    fixture_check = docker_fixture._command([
+        "exec", "-T", "fixture", "python3", "-c",
+        "from pathlib import Path; assert not Path('/pki/ca.key').exists()",
+    ])
+    probe_check = docker_fixture._command([
+        "run", "--rm", "--no-deps", "--entrypoint", "python3", "probe", "-c",
+        "from pathlib import Path; assert sorted(p.name for p in Path('/pki').iterdir()) == ['ca.crt']",
+    ])
+    assert fixture_check.returncode == 0, fixture_check.stderr
+    assert probe_check.returncode == 0, probe_check.stderr
+
+
 def test_real_classical_baseline_and_hybrid_verified_migration(docker_fixture: DockerFixture) -> None:
     identity = _identity(docker_fixture, "wrong_active_group")
     baseline = docker_fixture.probe("X25519")

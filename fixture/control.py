@@ -5,6 +5,7 @@ import fcntl
 import hashlib
 import json
 import os
+import shutil
 import signal
 import socket
 import subprocess
@@ -15,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path("/work")
 PKI = Path("/pki")
+TRUST = Path("/trust")
 GROUPS = {"X25519", "X25519MLKEM768"}
 SCENARIOS = {"wrong_active_group", "disk_runtime_mismatch", "one_shot_action_failure", "already_compliant", "impossible_client_requirement", "missing_probe_evidence", "held_out_config"}
 
@@ -96,23 +98,50 @@ def start_server(state: dict, config: dict) -> dict:
 def initialize() -> dict:
     ROOT.mkdir(exist_ok=True)
     PKI.mkdir(exist_ok=True)
-    complete = all((PKI / name).is_file() for name in ("ca.crt", "ca.key", "server.crt", "server.key"))
+    TRUST.mkdir(exist_ok=True)
+    ca_key = PKI / "ca.key"
+    complete = all((PKI / name).is_file() for name in ("ca.crt", "server.crt", "server.key"))
     valid = complete and subprocess.run(["openssl", "x509", "-checkend", "86400", "-noout", "-in", str(PKI / "server.crt")], capture_output=True, timeout=10).returncode == 0
     valid = valid and subprocess.run(["openssl", "verify", "-CAfile", str(PKI / "ca.crt"), str(PKI / "server.crt")], capture_output=True, timeout=10).returncode == 0
     if not valid:
+        ca_key.unlink(missing_ok=True)
         commands = [
-            ["openssl", "req", "-x509", "-newkey", "rsa:2048", "-sha256", "-nodes", "-days", "7", "-subj", "/CN=Invaris Fixture CA", "-keyout", str(PKI / "ca.key"), "-out", str(PKI / "ca.crt")],
+            ["openssl", "req", "-x509", "-newkey", "rsa:2048", "-sha256", "-nodes", "-days", "7", "-subj", "/CN=Invaris Fixture CA", "-keyout", str(ca_key), "-out", str(PKI / "ca.crt")],
             ["openssl", "req", "-new", "-newkey", "rsa:2048", "-nodes", "-subj", "/CN=fixture", "-addext", "subjectAltName=DNS:fixture", "-keyout", str(PKI / "server.key"), "-out", str(PKI / "server.csr")],
-            ["openssl", "x509", "-req", "-in", str(PKI / "server.csr"), "-CA", str(PKI / "ca.crt"), "-CAkey", str(PKI / "ca.key"), "-CAcreateserial", "-days", "7", "-sha256", "-copy_extensions", "copy", "-out", str(PKI / "server.crt")],
+            ["openssl", "x509", "-req", "-in", str(PKI / "server.csr"), "-CA", str(PKI / "ca.crt"), "-CAkey", str(ca_key), "-CAcreateserial", "-days", "7", "-sha256", "-copy_extensions", "copy", "-out", str(PKI / "server.crt")],
         ]
-        for command in commands:
-            subprocess.run(command, check=True, capture_output=True, timeout=30)
+        try:
+            for index, command in enumerate(commands):
+                if index == 0:
+                    prior_umask = os.umask(0o077)
+                    try:
+                        subprocess.run(command, check=True, capture_output=True, timeout=30)
+                    finally:
+                        os.umask(prior_umask)
+                    os.chown(ca_key, 0, 0)
+                    os.chmod(ca_key, 0o600)
+                else:
+                    subprocess.run(command, check=True, capture_output=True, timeout=30)
+        finally:
+            ca_key.unlink(missing_ok=True)
+    else:
+        ca_key.unlink(missing_ok=True)
     for directory in (ROOT, PKI):
         os.chown(directory, 10001, 10001)
         for path in directory.iterdir():
             if path.is_file():
                 os.chown(path, 10001, 10001)
                 os.chmod(path, 0o600 if path.suffix == ".key" else 0o640)
+    for path in TRUST.iterdir():
+        if path.is_dir() and not path.is_symlink():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
+    os.chown(TRUST, 10001, 10001)
+    os.chmod(TRUST, 0o755)
+    shutil.copyfile(PKI / "ca.crt", TRUST / "ca.crt")
+    os.chown(TRUST / "ca.crt", 10001, 10001)
+    os.chmod(TRUST / "ca.crt", 0o644)
     return {"ok": True, "initialized": True}
 
 
