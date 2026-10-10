@@ -16,6 +16,15 @@ Session `01a127ab-f2ef-70b1-b740-521377e433ee` implemented and reviewed the dura
 
 This checkpoint was captured after the implementation commit had already been pushed. No public history was rewritten, and that commit has no checkpoint trailer. This explicit mapping documents the real development context without claiming automatic hook capture or hosted sharing.
 
+## Later verified local captures
+
+- Checkpoint `01M4KX06F28V3WMA1DWX8MTXV6` captures the isolated business/evidence session and is linked to commit `7b888f4`.
+- Checkpoint `01M4KXFEQ6R8ERWR3SRD0ZB2GQ` captures the isolated Markdown/parser documentation session and is linked to commit `31362ea`; it does not capture every other worker's security changes.
+- The CLI reused checkpoint `01M4KVMJ6YKJ44M0VJ662YKDW2` on commit `9af9306`; the reused trailer is not new capture of the later changes.
+- Final-source Graph doctor/query evidence is saved in `docs/evidence/entire-final-graph.json` for commit `aa5777b`; it retrieves the infeasibility gate with no egress. This is source retrieval, not a new session checkpoint.
+
+Captured isolated transcripts were privately checked against configured secrets and key-shaped patterns with no matches. This is a targeted scan, not universal certification. Entire refs are local, not published hosted checkpoints.
+
 ## Evidence limits and next steps
 
 The checkpoint records one session; it does not fabricate earlier development history or prove that all implementation changes were captured. The graph query and checkpoint are complementary local artifacts. Keep actual timestamps and distinguish local evidence from hosted sharing.

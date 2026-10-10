@@ -4,9 +4,11 @@
 
 This is a sandbox release for the owned disposable TLS fixture. It does not migrate arbitrary production services, change certificate authentication to post-quantum signatures, or establish whole-system quantum safety. Fresh authenticated TLS 1.3 key exchange and the supported application response are checked against the fixture contract.
 
-As of October 11, 2026, the current test baseline passed 150 tests plus 9 subtests, with 7 real integration tests; Ruff and the pip audit passed. Full integration CI run `38087724134` succeeded on commit `08cb143`. The current-image setup ran and confirmed OpenSSL 3.5.9. Fresh-machine setup remains an open gate.
+The final semantic source is commit `aa5777b1647bdc712fc7a444e17a3679adb3021d`. Validation passes 185 unit tests plus 11 subtests, Ruff, and `pip check`. Full fresh CI run `38092951097` passed normal checks and all 8 real Docker/TLS integration tests on this source. A prior locked-dependency vulnerability audit found no known advisories; none of these checks certifies native or whole-system security. The current image confirms OpenSSL 3.5.9.
 
-A matched live evaluation with 3 repetitions, 7 scenarios, and 3 arms is running in `artifacts/evaluations/090330bb-2602-4397-9b7e-c6bc13e29d0d`. The earlier 3-repetition run stopped after 26 completed rows and one incomplete row; it is preserved as exploratory evidence and its partial results are not final scores.
+The final-source study `ebeea671-7e12-4493-9531-04456a74efeb` is complete: 21 attempts, 7 matched V1/V2 pairs, no control mismatches or unmatched attempts. Correct classifications: V1 6/7, V2 7/7, fixed script 7/7. V1 has one false-readiness claim; V2 and the script have zero. Each arm recovers in 2/2 seeded recovery cases. Estimated model costs are $0.3968316 (V1), $0.3992516 (V2), and $0 (script). One repetition cannot establish statistical superiority; the deterministic script knows this small fixture and is cheaper and faster.
+
+Historical studies remain unchanged: `090330` has 63 attempts (V1 16/21 correct, V2 17/21, script 21/21); `a6d844` has 21 attempts (V1 5/7, V2 6/7, script 7/7). They use earlier agent versions and are not pooled into the final study. See `docs/release-validation.md`.
 
 ## Prerequisites and setup
 
@@ -32,10 +34,10 @@ On Linux use `python3.12` and `.venv/bin/python`. The lock has no wheel hashes a
 ```powershell
 .venv\Scripts\python.exe -m invaris run --offline --approve-sandbox --scenario wrong_active_group
 .venv\Scripts\python.exe -m invaris evaluate --offline --approve-sandbox --include-held-out
-.venv\Scripts\python.exe -m invaris evaluate --resume-evaluation artifacts/evaluations/090330bb-2602-4397-9b7e-c6bc13e29d0d
+.venv\Scripts\python.exe -m invaris verify-bundle --directory artifacts/evaluations/ebeea671-7e12-4493-9531-04456a74efeb
 ```
 
-Offline mode is a scripted smoke model, not evidence of live agent improvement. The evaluation has V1, V2, and a deterministic fixed-script arm; the latter invokes no model. The running matched live evaluation should be resumed with `--resume-evaluation <directory>`; do not restart it as a fresh evaluation. Resume requires the integrity manifest and binds semantic source hashes, effective model, rates, budget, and scenarios. It does not reset project spend. The total configured limits for both versions are 64k tokens, 16 steps, 24 tool calls, and 600 seconds.
+Offline mode is a scripted smoke model, not evidence of live agent improvement. The evaluation has V1, V2, and a deterministic fixed-script arm; the latter invokes no model. All recorded studies are complete. Use `--resume-evaluation <directory>` only for a genuinely interrupted study with unchanged controls and source; never portray a new run as a continuation of changed-source evidence. Resume requires the integrity manifest and binds semantic source hashes, effective model, rates, budget, and scenarios. It does not reset project spend. The total configured limits for both versions are 64k tokens, 16 steps, 24 tool calls, and 600 seconds.
 
 ## Live model, rates, and ledger
 
@@ -59,9 +61,9 @@ To verify a run bundle:
 
 ## Partner evidence and business model
 
-- Neatlogs SDK readback verified real application trace `40733e2a561180a013f0a3bad929e3a0` with 9 spans, including 5 LLM spans; its trace status was `error`. Trace `4b821a1ab8e2fe622c7abd31cbd11f50` read back with 18 spans, including 7 LLM spans, and independently verified actual LLM tool use; the agent outcome is `UNVERIFIED` because its 24k token budget was exhausted. These are SDK readback-path results, not public CLI results. Live batch `090330` is still running with no final results; some batch traces remain processing or failed. The evidence JSON records pending/error attempts and will receive subsequent records.
-- Entire's seven Codex hooks await approval. One genuine local checkpoint was captured using the supported `entire session attach` recovery command and linked to the initial public commit. No hosted Entire GitHub App authorization or hosted checkpoint link is verified. Automatic hooks and session upload are not claimed.
-- The shared cfo.ai artifact was reviewed across all six pages and 39 Main Scenario months. The actual shared artifact is the source; no official export was needed. The $6 inference placeholder is not a measured cost. Cost reconciliation remains pending.
+- Neatlogs SDK readback verified real application trace `40733e2a561180a013f0a3bad929e3a0` with 9 spans, including 5 LLM spans; its trace status was `error`. Trace `4b821a1ab8e2fe622c7abd31cbd11f50` read back with 18 spans, including 7 LLM spans, and independently verified actual LLM tool use; the agent outcome is `UNVERIFIED` because its 24k token budget was exhausted. These are SDK readback-path results, not public CLI results. Matched-study readback has HTTP 409, HTTP 404, and partial HTTP 200 outcomes; full coverage is not confirmed. SDK graceful shutdown was observed and the Doctor probe passes, but neither proves application trace delivery. See `docs/evidence/final-study-trace-readback.json` for the complete final study's seven V2 readback attempts; missing/partial/failed telemetry remains unresolved.
+- Entire's seven Codex hooks await approval. Multiple genuine isolated-session checkpoints and final-source Graph retrieval are verified locally; see `docs/entire-evidence.md`. Hosted GitHub App/checkpoint links and automatic capture remain unverified.
+- The shared cfo.ai artifact was reviewed across all six pages and 39 Main Scenario months. The actual shared artifact is the source; no official export was needed. Measured inference reconciliation is recorded in `business/measured-assumptions.json`: the 21-attempt V2 live arm cost $1.2196459 estimated, or $0.1108769 per 11 verified migrations. Costs retain all attempts. The shared artifact's $6 inference placeholder remains unchanged; it is local planning content, not a cfo.ai export or a measured cost.
 
 The project directory itself should provide the current business command usage and evaluation inputs:
 
@@ -78,4 +80,4 @@ The project directory itself should provide the current business command usage a
 
 The second command deletes selected owned volumes, including ephemeral CA and fixture state; neither is a global Docker prune.
 
-Still open: finish and review the matched live evaluation; obtain completed readback for pending traces; reproduce setup on a fresh machine; complete the desired hosted Entire integration; reconcile measured inference cost; and conduct independent security/cryptographic review before any production expansion. Public submission, social posts, and demo publication are explicitly deferred. This is not an enterprise production release or a complete quantum-safe solution.
+The CA signing key is generated during root initialization and deleted after leaf issuance. The fixture retains its leaf key; the probe receives only a read-only trust volume containing the public CA certificate. TLS certificate signatures remain classical; the hybrid key-exchange group does not make certificate authentication post-quantum. The final-source release study is complete and reviewed. Still open: obtain full matched-study trace readback coverage; complete the desired hosted Entire integration; and conduct independent security/cryptographic review before any production expansion. Public submission, social posts, and demo publication are explicitly deferred. This is not an enterprise production release or a complete quantum-safe solution.

@@ -4,7 +4,7 @@
 
 Source: user-shared [cfo.ai model](https://cfo.ai/s/aMAZiEnSXtphYplP). The reviewer inspected all six visible model pages and each of the 39 rendered Main Scenario months from October 2026 through December 2029. This is a browser-observed review, **not** an official API or XLSX export. Values below are transcribed from the visible model as supplied in the review brief; no claim is made that a source export or underlying formula audit was performed.
 
-The business is a sandbox prototype with no validated customers or revenue. The forecast is a planning construct, not evidence of traction, customer demand, realized margin, or available financing. The roster is a 14-role placeholder plan and does not assert that these people are employed. A live cost evaluation is pending; no measured inference-cost result is available.
+The business is a sandbox prototype with no validated customers or revenue. The forecast is a planning construct, not evidence of traction, customer demand, realized margin, or available financing. The roster is a 14-role placeholder plan and does not assert that these people are employed. Local live inference estimates are now available in the reconciliation below; the shared model itself remains unchanged.
 
 ## Model inputs observed
 
@@ -59,7 +59,17 @@ This is an independently computed local sensitivity using the rounded cfo.ai Mai
 
 Under that calculation, cash first turns negative in May 2028 at approximately **($4,530)**; the minimum is approximately **($281,490)** in November 2028; December 2029 ending cash is approximately **$1,714,239**. Rounded displayed source values create rounding uncertainty. The case illustrates sensitivity to revenue delivery and reinforces the need for a cash buffer and hiring gates; it should not be represented as a model output or forecast.
 
+## Final-source inference update (October 11, 2026)
+
+The final-source study retained seven V2 live attempts: estimated inference $0.3992516, or $0.05703594 per attempt. Four independently verified non-no-op migrations give $0.0998129 per verified migration, retaining every V2 attempt in the cost numerator. These single-repetition estimates are a local inference reference only, not billed cost, full delivery COGS, a cfo.ai export, or statistical proof. The zero-inference fixture-specific script also passed all seven cases; no economic superiority over that script is claimed. See `business/final-measured-assumptions.json` and `docs/evidence/final-study-summary.json`. The historical reconciliation below remains unchanged.
+
 ## Practical decision implications
+
+### Measured inference reconciliation (October 11, 2026)
+
+The completed pre-repair matched study retained 21 live V2 attempts across seven seeded scenarios, with three repetitions each. Their conservative estimated inference total was **$1.2196459**, or **$0.0580784 per attempted run**. Eleven attempts were counted as independently verified non-no-op migrations, making inference **$0.1108769 per verified migration** when all V2 attempt costs remain in the numerator, including blocked, failed, missing-evidence, and no-op attempts. Per-run billed costs and separate recovery-only costs are unavailable, not zero.
+
+See `business/measured-assumptions.json` and `docs/evidence/matched-study-summary.json` for denominators, model, controls, and limits. These are local measurements and reconciliation, **not a cfo.ai export or an update to the shared read-only model**. The shared model still displays its $6 placeholder and PENDING measured field. The measured inference reference does not validate the separate $1.50 verification allowance or engineering, support, security, onboarding, infrastructure, and other delivery costs. This study predates the final status-parser/security repairs; subsequent release validation is documented separately rather than silently replacing these results.
 
 1. Protect liquidity: stage discretionary hiring against signed pilots, collections, and measured delivery capacity; monitor the cash trough and build a buffer for slower conversion or payment.
 2. Sell a scoped, paid three-month pilot with explicit success criteria and delivery boundaries. Do not sell the forecast as validated enterprise demand or promise a broad enterprise deployment on these assumptions.

@@ -1,0 +1,273 @@
+{
+  "schema": "invaris.entire-graph-evidence/v1",
+  "verified_at": "2026-10-10T22:57:42.447Z",
+  "source_commit": "aa5777b1647bdc712fc7a444e17a3679adb3021d",
+  "query": {
+    "query": "Agent.run stops on infeasibility_gate before further tool actions",
+    "repo_root": "D:\\neatlogs",
+    "commit": "aa5777b1647bdc712fc7a444e17a3679adb3021d",
+    "tree": "60d2705bbdf440f47cfb464554c597eb6fdd1745",
+    "profile": "fast",
+    "results": [
+      {
+        "rank": 1,
+        "score": 94.4441,
+        "file_path": "src/invaris/controller.py",
+        "start_line": 85,
+        "end_line": 90,
+        "focus_line": 85,
+        "snippet_start_line": 85,
+        "snippet_end_line": 90,
+        "symbol_start_line": 85,
+        "symbol_end_line": 90,
+        "language": "Python",
+        "kind": "method",
+        "symbol_id": "gh/singhjashanjot/invaris:Python:src/invaris/controller.py:method:Controller.infeasibility_gate",
+        "symbol_name": "infeasibility_gate",
+        "qualified_name": "Controller.infeasibility_gate",
+        "signature": "def infeasibility_gate(self, receipts: list[ToolReceipt]) -> bool",
+        "signals": [
+          "body",
+          "exact-symbol",
+          "symbol-name",
+          "signature",
+          "constraint:entity",
+          "constraint:phrase",
+          "constraint:relationship",
+          "exact-code-token"
+        ],
+        "snippet": "    def infeasibility_gate(self, receipts: list[ToolReceipt]) -> bool:\n        identity = self.contract.identity\n        return any(r.ok and r.name in {\"inspect_capabilities\", \"check_policy\"}\n                   and r.policy_feasible is False\n                   and r.instance_id == identity.instance_id and r.run_id == identity.run_id\n                   and r.candidate_id == identity.candidate_id for r in receipts)"
+      },
+      {
+        "rank": 2,
+        "score": 85.4997,
+        "file_path": "src/invaris/agent.py",
+        "start_line": 75,
+        "end_line": 79,
+        "focus_line": 77,
+        "snippet_start_line": 75,
+        "snippet_end_line": 79,
+        "symbol_start_line": 47,
+        "symbol_end_line": 174,
+        "language": "Python",
+        "kind": "method",
+        "symbol_id": "gh/singhjashanjot/invaris:Python:src/invaris/agent.py:method:Agent.run",
+        "symbol_name": "run",
+        "qualified_name": "Agent.run",
+        "signature": "def run(self, resume: bool = False) -> AgentResult",
+        "signals": [
+          "body",
+          "symbol-name",
+          "symbol-usage"
+        ],
+        "snippet": "        self._persist(started)\n        for step in range(step_offset + 1, self.contract.budgets.max_steps + 1):\n            if self.version == AgentVersion.V2 and self.controller.infeasibility_gate(receipts):\n                return self._result(ResultStatus.BLOCKED, \"independent policy evidence shows infeasibility\", step - 1, receipts, usage, started, claimed_status, model_claim, accumulated_duration)\n            if self._elapsed(started, accumulated_duration) >= self.contract.budgets.max_duration_seconds:"
+      },
+      {
+        "rank": 3,
+        "score": 85.4997,
+        "file_path": "src/invaris/agent.py",
+        "start_line": 114,
+        "end_line": 118,
+        "focus_line": 116,
+        "snippet_start_line": 114,
+        "snippet_end_line": 118,
+        "symbol_start_line": 47,
+        "symbol_end_line": 174,
+        "language": "Python",
+        "kind": "method",
+        "symbol_id": "gh/singhjashanjot/invaris:Python:src/invaris/agent.py:method:Agent.run",
+        "symbol_name": "run",
+        "qualified_name": "Agent.run",
+        "signature": "def run(self, resume: bool = False) -> AgentResult",
+        "signals": [
+          "body",
+          "symbol-name",
+          "symbol-usage"
+        ],
+        "snippet": "                claimed_status = self._claimed_status(reply.content)\n                if claimed_status == ResultStatus.BLOCKED:\n                    if self.controller.infeasibility_gate(receipts):\n                        return self._result(ResultStatus.BLOCKED, reply.content.partition(\":\")[2].strip() or \"independent policy evidence shows infeasibility\", step, receipts, usage, started, claimed_status, model_claim, accumulated_duration)\n                    return self._result(ResultStatus.UNVERIFIED, \"model claimed BLOCKED without independent infeasibility evidence\", step, receipts, usage, started, claimed_status, model_claim, accumulated_duration)"
+      },
+      {
+        "rank": 4,
+        "score": 0,
+        "file_path": "tests/test_agent.py",
+        "start_line": 69,
+        "end_line": 73,
+        "focus_line": 73,
+        "snippet_start_line": 72,
+        "snippet_end_line": 73,
+        "kind": "function",
+        "qualified_name": "test_v2_does_not_trust_final_model_claim",
+        "signals": [
+          "related:covering-test"
+        ],
+        "section": "covering-test",
+        "snippet": "    assert result.status == ResultStatus.UNVERIFIED\n    assert \"DETERMINISTIC_OFFLINE_TEST_MODEL\" == model.label"
+      }
+    ],
+    "literal_cluster": {
+      "literal": "ToolReceipt",
+      "hits": [
+        {
+          "file_path": "src/invaris/agent.py",
+          "line": 53,
+          "symbol": "Agent.run",
+          "role": "CONSUMER"
+        },
+        {
+          "file_path": "src/invaris/contracts.py",
+          "line": 100,
+          "symbol": "ToolReceipt",
+          "role": "EDIT"
+        },
+        {
+          "file_path": "src/invaris/contracts.py",
+          "line": 122,
+          "symbol": "AgentResult",
+          "role": "EDIT"
+        },
+        {
+          "file_path": "src/invaris/controller.py",
+          "line": 8,
+          "role": "EDIT"
+        },
+        {
+          "file_path": "src/invaris/controller.py",
+          "line": 16,
+          "symbol": "Controller.execute",
+          "role": "CONSUMER"
+        }
+      ],
+      "hits_total": 27,
+      "files_total": 4,
+      "unclassified": 1
+    },
+    "verify_command": {
+      "command": "python -m pytest tests/test_agent.py -k test_v2_does_not_trust_final_model_claim",
+      "targets": "tests/test_agent.py",
+      "derived_from": "pyproject.toml pytest config + covering test path",
+      "tier": "narrow"
+    },
+    "coverage_note": {
+      "symbol": "run",
+      "total": 16,
+      "peers": [
+        "execute",
+        "make_contract",
+        "test_v2_requires_fresh_matching_probe_and_application_evidence",
+        "test_v2_missing_probe_evidence_claim_remains_unverified_after_probe_failure",
+        "test_v1_preserves_claim_separately_from_observed_verification"
+      ],
+      "more": 10,
+      "file_path": "tests/test_agent.py"
+    },
+    "stats": {
+      "files_scanned": 73,
+      "preselection_backend": "inventory",
+      "preselection_passes": 1,
+      "preselection_files_examined": 73,
+      "files_content_read_during_preselection": 0,
+      "files_content_read_during_query": 73,
+      "bytes_content_read_during_query": 739300,
+      "files_indexed": 73,
+      "symbols_considered": 1000,
+      "lexical_candidates": 406,
+      "graph_candidates": 16,
+      "caller_boosted_candidates": 36,
+      "identifier_usage_candidates": 3,
+      "same_container_neighbor_candidates": 1,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 4,
+      "result_bytes": 3714,
+      "context_budget_bytes": 5000,
+      "covering_tests": 1,
+      "literal_cluster_bytes": 512,
+      "literal_cluster_hits": 5,
+      "verify_command_bytes": 392,
+      "verify_tier": "narrow",
+      "context_block_bytes": 904,
+      "index_cache_hit": false,
+      "index_latency_ms": 1013,
+      "query_latency_ms": 422,
+      "total_latency_ms": 1672,
+      "search_latency_ms": 1672,
+      "preselect_latency_ms": 236
+    },
+    "warnings": [
+      {
+        "code": "W_WORKTREE_SNAPSHOT",
+        "severity": "warning",
+        "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+    ],
+    "partial_failures": [],
+    "completeness": {
+      "languages": {
+        "C": {
+          "files": 2,
+          "symbols": 8
+        },
+        "Dockerfile": {
+          "files": 1,
+          "symbols": 2
+        },
+        "Git Ignore": {
+          "files": 2,
+          "symbols": 2
+        },
+        "JSON": {
+          "files": 11,
+          "symbols": 441
+        },
+        "Markdown": {
+          "files": 7,
+          "symbols": 83
+        },
+        "Python": {
+          "files": 42,
+          "symbols": 431
+        },
+        "TOML": {
+          "files": 1,
+          "symbols": 22
+        },
+        "YAML": {
+          "files": 2,
+          "symbols": 11
+        }
+      },
+      "relations": {
+        "CALLS": 196,
+        "CONFIGURES": 476,
+        "CONSTRUCTS": 161,
+        "CONTAINS": 198,
+        "DEFINES": 1000,
+        "HANDLES_ROUTE": 4,
+        "HANDLES_TOOL": 7,
+        "IMPORTS": 380,
+        "RESOURCE_DEPENDS_ON": 2
+      }
+    }
+  },
+  "doctor": {
+    "environment": {
+      "ENTIRE_CLI_VERSION": "0.11.4",
+      "ENTIRE_PLUGIN_DATA_DIR": "C:\\Users\\JASHAN\\AppData\\Local\\entire\\plugins\\data\\graph",
+      "ENTIRE_REPO_ROOT": "D:/neatlogs"
+    },
+    "no_egress": true,
+    "phase_1_local_only": {
+      "call_hosted_model_apis": false,
+      "call_remote_embedding_provider": false,
+      "download_grammars_or_assets": false,
+      "fetch_remote_code": false,
+      "perform_network_discovery": false,
+      "upload_telemetry": false
+    },
+    "plugin_data_dir": "writable",
+    "provider": "entire-graph",
+    "repo_root": "D:/neatlogs",
+    "version": "v0.4.0"
+  },
+  "note": "Actual local code retrieval and no-egress doctor. Not a measured token-savings or hosted-checkpoint claim."
+}

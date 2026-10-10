@@ -1,0 +1,84 @@
+{
+  "schema": "invaris.neatlogs-doctor-evidence/v1",
+  "verified_at": "2026-10-10T22:56:48.425Z",
+  "synthetic_only": true,
+  "status": "pass",
+  "first_failure": null,
+  "runtime": {
+    "language": "python",
+    "schema_version": "2",
+    "sdk_version": "1.4.26",
+    "transport": "otlp_http_protobuf"
+  },
+  "capture": {
+    "root_span_id": "5f2b0b36ebbe4895",
+    "semantic_digest": "sha256:7163d2de42c4165f3ae552279fdde2ec0839413ce608c6e5d71f3fb532df319b",
+    "span_count": 4,
+    "trace_id": "74d1d5b23d1661452444ba082e929a20"
+  },
+  "checks": [
+    {
+      "message": "The final normalized local envelope is valid",
+      "name": "local_envelope",
+      "reason_code": "LOCAL_ENVELOPE_VALID",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "message": "The exact Doctor trace is visible through the authenticated trace API",
+      "name": "probe_visibility",
+      "reason_code": "TRACE_VISIBLE",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "details": {
+        "current_stage": "finalized",
+        "ingestion_state": "succeeded",
+        "last_successful_stage": "finalized",
+        "retryable": false
+      },
+      "message": "The exact Doctor trace reached a terminal materialized state",
+      "name": "probe_finalization",
+      "reason_code": "TRACE_FINALIZED",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "message": "The persisted Doctor hierarchy has one root and valid parents",
+      "name": "probe_hierarchy",
+      "reason_code": "HIERARCHY_VALID",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "message": "The persisted Doctor span names and types are complete",
+      "name": "probe_attributes",
+      "reason_code": "ATTRIBUTES_VALID",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "message": "The persisted Doctor spans retain input and output",
+      "name": "probe_input_output",
+      "reason_code": "INPUT_OUTPUT_VALID",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "message": "The versioned Doctor SDK metadata survived finalization",
+      "name": "probe_metadata",
+      "reason_code": "METADATA_VALID",
+      "remediation_code": "NONE",
+      "status": "pass"
+    },
+    {
+      "message": "Persisted token totals remain numeric",
+      "name": "probe_typed_tokens",
+      "reason_code": "TYPED_TOKENS_VALID",
+      "remediation_code": "NONE",
+      "status": "pass"
+    }
+  ],
+  "note": "Official SDK Doctor synthetic probe; not evidence of application span coverage."
+}

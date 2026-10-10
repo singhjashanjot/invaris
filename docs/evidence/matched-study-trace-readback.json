@@ -1,0 +1,183 @@
+{
+  "schema": "invaris.matched-study-trace-readback/v1",
+  "verified_at": "2026-10-10T22:02:03.748Z",
+  "study_id": "090330bb-2602-4397-9b7e-c6bc13e29d0d",
+  "records": [
+    {
+      "run_id": "d8cf09fb-3b96-443c-9b91-f8c4c629dcde",
+      "scenario": "held_out_config",
+      "agent_version": "V1",
+      "local_agent_status": "UNVERIFIED",
+      "independent_status": "FAILED",
+      "trace_id": "78e63de016d34a626d974b91cee9551d",
+      "http_status": 409,
+      "finalization_status": "dlq",
+      "observed_span_count": 0,
+      "message": "We couldn't finish preparing this trace. Please retry or contact support."
+    },
+    {
+      "run_id": "b7b7f903-6ff0-41aa-83f2-af0c6e7f52a2",
+      "scenario": "held_out_config",
+      "agent_version": "V1",
+      "local_agent_status": "UNVERIFIED",
+      "independent_status": "FAILED",
+      "trace_id": "2f6298e94111025a127bb303df27bfcc",
+      "http_status": 200,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "trace_status": "success",
+      "remote_span_count": 2,
+      "observed_span_count": 2,
+      "remote_llm_calls": 0,
+      "spans": [
+        {
+          "id": "8bb28162c120f98d",
+          "parent": null,
+          "name": "invaris.run",
+          "type": "workflow",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "490047253cd69a8e",
+          "parent": "8bb28162c120f98d",
+          "name": "invaris.migration.V1",
+          "type": "workflow",
+          "status": "SUCCESS"
+        }
+      ],
+      "expected_model_calls": 5,
+      "complete_application_coverage_verified": false
+    },
+    {
+      "run_id": "9a0f8316-55eb-40a9-afe0-d38c18c68cae",
+      "scenario": "held_out_config",
+      "agent_version": "V1",
+      "local_agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "717903abc70dee29817444a924c5caf1",
+      "http_status": 404,
+      "observed_span_count": 0
+    },
+    {
+      "run_id": "ab6de677-6043-42f6-b475-7f0b456347be",
+      "scenario": "one_shot_action_failure",
+      "agent_version": "V2",
+      "local_agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "c4fa5f3059bfb337d35775402a572987",
+      "http_status": 409,
+      "finalization_status": "dlq",
+      "observed_span_count": 0,
+      "message": "We couldn't finish preparing this trace. Please retry or contact support."
+    },
+    {
+      "run_id": "56a792a4-0806-4c11-94e6-2f90e2a7bd69",
+      "scenario": "one_shot_action_failure",
+      "agent_version": "V2",
+      "local_agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "bba174c03dd6168b94ef380bf04cb8f8",
+      "http_status": 404,
+      "observed_span_count": 0
+    },
+    {
+      "run_id": "10df1514-8894-4c18-b2dc-f162a812e782",
+      "scenario": "one_shot_action_failure",
+      "agent_version": "V2",
+      "local_agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "f7f0ed614803250374b2b9f0487e2c1a",
+      "http_status": 409,
+      "finalization_status": "dlq",
+      "observed_span_count": 0,
+      "message": "We couldn't finish preparing this trace. Please retry or contact support."
+    },
+    {
+      "run_id": "cfd4f32e-5e42-4477-acff-fefc5e6ae738",
+      "scenario": "impossible_client_requirement",
+      "agent_version": "V2",
+      "local_agent_status": "UNVERIFIED",
+      "independent_status": "BLOCKED",
+      "trace_id": "929bc41c990d0e2673a0ae9997285168",
+      "http_status": 200,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "trace_status": "success",
+      "remote_span_count": 6,
+      "observed_span_count": 6,
+      "remote_llm_calls": 2,
+      "spans": [
+        {
+          "id": "cf87f29ff0c2bea7",
+          "parent": null,
+          "name": "invaris.run",
+          "type": "workflow",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "0e35d8c24f0d4823",
+          "parent": "9e62e3fe92ca3b27",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "9e62e3fe92ca3b27",
+          "parent": "cf87f29ff0c2bea7",
+          "name": "invaris.migration.V2",
+          "type": "workflow",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "7c5dd4afe5642ffe",
+          "parent": "9e62e3fe92ca3b27",
+          "name": "inspect_service",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "04849ead009ccd8d",
+          "parent": "9e62e3fe92ca3b27",
+          "name": "inspect_capabilities",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "eb922cc0f2debb7e",
+          "parent": "9e62e3fe92ca3b27",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS"
+        }
+      ],
+      "expected_model_calls": 3,
+      "complete_application_coverage_verified": false
+    },
+    {
+      "run_id": "24a432eb-ba80-4774-a338-497509f725ff",
+      "scenario": "impossible_client_requirement",
+      "agent_version": "V2",
+      "local_agent_status": "UNVERIFIED",
+      "independent_status": "BLOCKED",
+      "trace_id": "860f4ecc40536fc6f8db4a7ae723877a",
+      "http_status": 404,
+      "observed_span_count": 0
+    },
+    {
+      "run_id": "ccbb17ce-693f-4d88-9fa9-3e1455cd2c45",
+      "scenario": "impossible_client_requirement",
+      "agent_version": "V2",
+      "local_agent_status": "UNVERIFIED",
+      "independent_status": "BLOCKED",
+      "trace_id": "eee9a51be0a495b2790840984ff792ea",
+      "http_status": 409,
+      "finalization_status": "dlq",
+      "observed_span_count": 0,
+      "message": "We couldn't finish preparing this trace. Please retry or contact support."
+    }
+  ],
+  "complete_application_coverage_verified": false,
+  "limitations": [
+    "SDK readback path, not public CLI OAuth.",
+    "Remote success status does not imply agent success or all expected spans present.",
+    "409 processing failures, 404 missing traces and partial 200 responses retained; graceful SDK shutdown was observed."
+  ]
+}

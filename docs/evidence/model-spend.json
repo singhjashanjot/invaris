@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-10T23:07:42.501Z",
+  "local_conservative_estimate_usd": 5.6113937,
+  "gateway_reported_key_spend_usd": 3.009210600000001,
+  "gateway_read_http_status": 200,
+  "authorized_total_usd": 10,
+  "billing_guarantee": false
+}

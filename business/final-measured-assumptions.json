@@ -1,0 +1,26 @@
+{
+  "schema": "invaris.final-inference-reference/v1",
+  "actual_cfo_export": false,
+  "shared_cfo_model_updated": false,
+  "study_id": "ebeea671-7e12-4493-9531-04456a74efeb",
+  "source_commit": "aa5777b1647bdc712fc7a444e17a3679adb3021d",
+  "arm": "V2",
+  "mode": "live-model",
+  "model": "claude-haiku",
+  "attempts": 7,
+  "estimated_inference_usd": 0.39925160000000004,
+  "estimated_usd_per_attempt": 0.05703594285714286,
+  "verified_non_noop_migrations": 4,
+  "estimated_usd_per_verified_migration": 0.09981290000000001,
+  "billed_inference_usd": null,
+  "recovery_only_cost_usd": null,
+  "all_attempt_costs_retained": true,
+  "full_delivery_cogs_validated": false,
+  "limitations": [
+    "One repetition per scenario per arm; not statistical proof or production accuracy.",
+    "The fixture-specific deterministic script matches V2 with no inference cost and lower elapsed time.",
+    "Historical studies remain unchanged; results are not pooled across changed source versions.",
+    "Costs are configured estimates, not provider invoices; elapsed time is sequential observed run time.",
+    "Cloud Neatlogs coverage is incomplete; local outcome verification is separate."
+  ]
+}

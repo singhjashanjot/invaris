@@ -9,7 +9,7 @@ The model describes a sandbox prototype with no validated customers or revenue. 
 ## Evidence to retain and refresh
 
 1. Preserve sanitized screenshots or a user-provided official export if a durable audit trail is needed; do not describe this browser review as an export.
-2. Measure live inference cost and record workload, model/provider, volume, and measurement window. The current measured field is $0 and marked “PENDING - using placeholder”; $6 is a placeholder, not a validated all-in COGS estimate.
+2. Local measured-cost reconciliation is complete in `measured-assumptions.json` for the historical three-repetition study and `final-measured-assumptions.json` for the final-source study. The shared cfo.ai measured field remains $0/PENDING with a $6 placeholder; neither local file is a cfo.ai export or an update to that shared model. These are inference estimates, not all-in COGS or invoices.
 3. Reconcile the model's date labels and publish accessible, documented scenario cases before relying on downside or upside claims.
 4. Revisit pilot conversion, contract conversion, churn, hiring timing, collections, and cash needs as evidence arrives.
 

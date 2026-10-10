@@ -1,0 +1,237 @@
+{
+  "schema": "invaris.final-study-trace-readback/v1",
+  "checked_at": "2026-10-10T23:08:31.091Z",
+  "study_id": "ebeea671-7e12-4493-9531-04456a74efeb",
+  "readback_mechanism": "Installed SDK Doctor endpoint; not public API CLI OAuth",
+  "records": [
+    {
+      "run_id": "fc61d744-eb06-4268-95dc-93a1fee422c5",
+      "scenario": "wrong_active_group",
+      "agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "d73b80006033daa1ab29c4e0b4ae44aa",
+      "http_status": 200,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "finalization_status": null,
+      "remote_span_count": 9,
+      "remote_llm_calls": 3,
+      "remote_tool_calls": 5,
+      "expected_model_calls": 7,
+      "expected_agent_tool_calls": 8,
+      "complete_application_coverage_verified": false,
+      "spans": [
+        {
+          "id": "0c3c4c1292aeb9f9",
+          "parent": null,
+          "name": "invaris.run",
+          "type": "workflow",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "924d5fb82aca5ee4",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "69e957d818465423",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "inspect_service",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "8f28d45ccefb4044",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "inspect_capabilities",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "a28435a3858b66e7",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "9b37a21b9d53ac7a",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "check_application",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "af82a3b22e8ef8d6",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "4b0ed5b963929e6c",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "collect_evidence",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "cdb5a3a2c2b79826",
+          "parent": "0c3c4c1292aeb9f9",
+          "name": "invaris.rollback_and_reverify",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "run_id": "420c8721-5939-4a4f-a2a0-01ccd5643c07",
+      "scenario": "disk_runtime_mismatch",
+      "agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "66bae7123afc5da9c4adcb5da676fa16",
+      "http_status": 404,
+      "project_id": null,
+      "finalization_status": null,
+      "remote_span_count": 0,
+      "remote_llm_calls": null,
+      "remote_tool_calls": null,
+      "expected_model_calls": 5,
+      "expected_agent_tool_calls": 6,
+      "complete_application_coverage_verified": false,
+      "spans": []
+    },
+    {
+      "run_id": "d3dc3d68-3c27-49d6-9ec8-8e48626b59ae",
+      "scenario": "one_shot_action_failure",
+      "agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "6bd6c2c7541df830c3892f68c2bcaeac",
+      "http_status": 409,
+      "project_id": null,
+      "finalization_status": "dlq",
+      "remote_span_count": 0,
+      "remote_llm_calls": null,
+      "remote_tool_calls": null,
+      "expected_model_calls": 8,
+      "expected_agent_tool_calls": 9,
+      "complete_application_coverage_verified": false,
+      "spans": []
+    },
+    {
+      "run_id": "176533b4-cbcf-4edb-b7b8-e34a8a4fb62f",
+      "scenario": "already_compliant",
+      "agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "284ed0ef4c5ba70404c6ecabd607106f",
+      "http_status": 200,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "finalization_status": null,
+      "remote_span_count": 2,
+      "remote_llm_calls": 0,
+      "remote_tool_calls": 1,
+      "expected_model_calls": 4,
+      "expected_agent_tool_calls": 5,
+      "complete_application_coverage_verified": false,
+      "spans": [
+        {
+          "id": "accccf1e6f66b9f6",
+          "parent": null,
+          "name": "invaris.run",
+          "type": "workflow",
+          "status": "SUCCESS"
+        },
+        {
+          "id": "722ecc077b434a48",
+          "parent": "accccf1e6f66b9f6",
+          "name": "invaris.rollback_and_reverify",
+          "type": "tool_call",
+          "status": "SUCCESS"
+        }
+      ]
+    },
+    {
+      "run_id": "4f4133fb-db1c-40d2-94d2-08d00869c640",
+      "scenario": "impossible_client_requirement",
+      "agent_status": "BLOCKED",
+      "independent_status": "BLOCKED",
+      "trace_id": "31553e79fb615562c0fd9b395d987730",
+      "http_status": 404,
+      "project_id": null,
+      "finalization_status": null,
+      "remote_span_count": 0,
+      "remote_llm_calls": null,
+      "remote_tool_calls": null,
+      "expected_model_calls": 1,
+      "expected_agent_tool_calls": 2,
+      "complete_application_coverage_verified": false,
+      "spans": []
+    },
+    {
+      "run_id": "0ee89d69-e2fa-4fd9-9bfb-9d0bfeef9573",
+      "scenario": "missing_probe_evidence",
+      "agent_status": "UNVERIFIED",
+      "independent_status": "UNVERIFIED",
+      "trace_id": "ac384d618e6210cad5904ac2ca8cdcad",
+      "http_status": 404,
+      "project_id": null,
+      "finalization_status": null,
+      "remote_span_count": 0,
+      "remote_llm_calls": null,
+      "remote_tool_calls": null,
+      "expected_model_calls": 8,
+      "expected_agent_tool_calls": 8,
+      "complete_application_coverage_verified": false,
+      "spans": []
+    },
+    {
+      "run_id": "ef0dcc12-b19b-4ff7-800d-170382b6a9f5",
+      "scenario": "held_out_config",
+      "agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "28555f53e6b8a39487e2980ad97e4f35",
+      "http_status": 409,
+      "project_id": null,
+      "finalization_status": "dlq",
+      "remote_span_count": 0,
+      "remote_llm_calls": null,
+      "remote_tool_calls": null,
+      "expected_model_calls": 11,
+      "expected_agent_tool_calls": 12,
+      "complete_application_coverage_verified": false,
+      "spans": []
+    }
+  ],
+  "sdk_delivery_diagnostics": {
+    "span_queue_drops": 0,
+    "log_queue_drops": 0,
+    "span_export_failures": 0,
+    "log_export_failures": 0,
+    "masked_span_drops": 0,
+    "masked_log_drops": 0,
+    "span_capture_truncations": 0,
+    "log_capture_truncations": 0,
+    "span_overflow_exports": 0,
+    "span_overflow_failures": 0,
+    "span_overflow_unavailable": 0,
+    "log_overflow_exports": 0,
+    "log_overflow_failures": 0,
+    "log_overflow_unavailable": 0,
+    "span_upload_authority_available": false,
+    "log_upload_authority_available": false,
+    "span_upload_authority_reason": "backend_upload_contract_unavailable",
+    "log_upload_authority_reason": "backend_upload_contract_unavailable",
+    "span_media_uploads": 0,
+    "span_media_upload_failures": 0,
+    "log_media_uploads": 0,
+    "log_media_upload_failures": 0,
+    "upload_last_failure_reason": ""
+  },
+  "all_records_complete": false,
+  "limitations": [
+    "SDK counters are zero after graceful shutdown; this is not proof of complete cloud persistence.",
+    "No known exact root cause; SDK/backend persistence/readback investigation remains open.",
+    "HTTP 200 partial traces, HTTP 404 missing traces, and HTTP 409 dlq traces are retained without substitution."
+  ]
+}
