@@ -1,0 +1,6 @@
+**
+!fixture/
+!fixture/Dockerfile
+!fixture/server.c
+!fixture/probe.c
+!fixture/control.py

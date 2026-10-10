@@ -1,0 +1,16 @@
+.venv/
+.tools/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+artifacts/runs/
+artifacts/evaluations/
+artifacts/private/
+*.key
+*.pem
+.entire/tmp/

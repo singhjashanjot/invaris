@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "invaris"
+version = "0.1.0"
+description = "Verified cryptographic change in an authorized TLS sandbox"
+requires-python = ">=3.12"
+dependencies = ["pydantic==2.14.0", "openai==2.54.0", "neatlogs==1.4.26", "python-dotenv==1.2.4", "filelock==4.1.0"]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "ruff==0.17.0", "pip-audit==2.10.1"]
+
+[project.scripts]
+invaris = "invaris.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: real Docker fixture tests"]
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

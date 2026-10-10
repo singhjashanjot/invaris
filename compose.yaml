@@ -1,0 +1,56 @@
+services:
+  init:
+    build:
+      context: .
+      dockerfile: fixture/Dockerfile
+    image: invaris-fixture:0.1.0
+    user: "0:0"
+    command: ["initialize"]
+    network_mode: none
+    volumes:
+      - state:/work
+      - pki:/pki
+    security_opt: ["no-new-privileges:true"]
+  fixture:
+    image: invaris-fixture:0.1.0
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    command: ["serve"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    volumes:
+      - state:/work
+      - pki:/pki:ro
+    networks: [sandbox]
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 64
+    healthcheck:
+      test: ["CMD", "python3", "/opt/invaris/control.py", "health"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  probe:
+    image: invaris-fixture:0.1.0
+    entrypoint: ["/opt/openssl/bin/invaris-probe"]
+    command: ["X25519MLKEM768", "/pki/ca.crt"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    volumes:
+      - pki:/pki:ro
+    networks: [sandbox]
+    mem_limit: 128m
+    cpus: 1.0
+    pids_limit: 32
+    profiles: [tools]
+volumes:
+  state:
+  pki:
+networks:
+  sandbox:
+    internal: true
+
