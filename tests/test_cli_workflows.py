@@ -162,3 +162,17 @@ def test_live_report_is_not_mislabeled_as_offline(tmp_path):
     run_with_mocks(tmp_path, FakeFixture(), [verified_evidence(), verified_evidence()], offline=False)
     report = next((tmp_path / "runs").iterdir()) / "report.html"
     assert "Run mode: live-model" in report.read_text(encoding="utf-8")
+
+
+def test_doctor_passes_explicit_partner_evidence_inventory_paths(tmp_path):
+    with patch("invaris.cli.load_dotenv"), patch("invaris.integrations.check_integrations", return_value=[]) as check:
+        assert cli.main(["--root", str(tmp_path), "doctor"]) == 0
+
+    check.assert_called_once_with(
+        evidence={
+            "entire": (tmp_path / "docs" / "evidence" / "entire-checkpoint.json",
+                       tmp_path / "docs" / "evidence" / "entire-graph.json"),
+            "cfo.ai": (tmp_path / "business" / "cfo-review.md", tmp_path / "business" / "README.md"),
+        },
+        neatlogs_probe=False,
+    )

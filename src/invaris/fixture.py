@@ -64,7 +64,7 @@ class DockerFixture:
                 self._keepalive.wait(timeout=5)
 
     def build(self) -> None:
-        result = self._command(["build", "init"], timeout=1800)
+        result = self._command(["build", "--quiet", "init"], timeout=1800)
         if result.returncode:
             raise FixtureError("image build failed: " + result.stderr[-2000:])
 

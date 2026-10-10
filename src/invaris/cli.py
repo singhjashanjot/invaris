@@ -49,6 +49,66 @@ def _model(arguments: argparse.Namespace, version: str):
     return ProjectBudgetedProvider(_root(arguments), arguments.model or None, float(os.environ["INVARIS_MAX_SPEND_USD"]))
 
 
+def _evaluation_config(root: Path, arguments: argparse.Namespace, scenarios: tuple[str, ...]) -> dict[str, Any]:
+    sources = ("agent.py", "providers.py", "budget.py", "controller.py", "tools.py", "verifier.py", "fixture.py")
+    package = Path(__file__).parent
+    hashes = {name: hashlib.sha256((package / name).read_bytes()).hexdigest() for name in sources}
+    fixture_sources = ("fixture/Dockerfile", "fixture/server.c", "fixture/probe.c", "fixture/control.py")
+    fixture_root = root if all((root / name).is_file() for name in fixture_sources) else ROOT
+    hashes.update({name: hashlib.sha256((fixture_root / name).read_bytes()).hexdigest() for name in fixture_sources})
+    live_settings = {} if arguments.offline else {
+        "model": (arguments.model or os.getenv("INVARIS_MODEL", "")).strip(),
+        "base_url": os.getenv("OPENAI_BASE_URL", ""),
+        "max_spend_usd": os.getenv("INVARIS_MAX_SPEND_USD", ""),
+        "input_usd_per_million": os.getenv("INVARIS_INPUT_USD_PER_MILLION", ""),
+        "output_usd_per_million": os.getenv("INVARIS_OUTPUT_USD_PER_MILLION", ""),
+    }
+    return {"schema": "invaris.matched-evaluation/v1", "offline": arguments.offline,
+            "model": "offline-smoke" if arguments.offline else live_settings["model"],
+            "live_settings": live_settings,
+            "repetitions": arguments.repetitions, "scenarios": list(scenarios),
+            "policy": "strict-hybrid-v1", "budget": "16steps-24tools-64000tokens-600seconds",
+            "include_held_out": arguments.include_held_out, "source_hashes": hashes}
+
+
+def _validate_evaluation_rows(rows: Any, scenarios: tuple[str, ...], repetitions: int) -> list[dict[str, Any]]:
+    if not isinstance(rows, list):
+        raise ValueError("persisted evaluation runs.json must contain an array")
+    allowed_arms = {"V1", "V2", "Fixed script"}
+    counts: dict[tuple[str, str], int] = {}
+    run_ids: set[str] = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("persisted evaluation rows must be objects")
+        arm = row.get("version")
+        scenario = row.get("scenario_id")
+        run_id = row.get("run_id")
+        if arm not in allowed_arms or scenario not in scenarios:
+            raise ValueError("persisted evaluation row has an unknown arm or scenario")
+        if not isinstance(run_id, str) or not run_id.strip() or run_id in run_ids:
+            raise ValueError("persisted evaluation rows require unique nonempty run IDs")
+        run_ids.add(run_id)
+        key = (arm, scenario)
+        counts[key] = counts.get(key, 0) + 1
+        if counts[key] > repetitions:
+            raise ValueError("persisted evaluation has more attempts than configured")
+    return rows
+
+
+def _checkpoint_evaluation(destination: Path, rows: list[dict[str, Any]], config: dict[str, Any], complete: bool) -> dict[str, Any]:
+    versions = {arm: [row for row in rows if row.get("version") == arm]
+                for arm in ("V1", "V2", "Fixed script")}
+    comparison = compare_runs(versions["V1"], versions["V2"], versions["Fixed script"])
+    comparison["mode"] = "offline smoke, NOT evidence of live LLM improvement" if config["offline"] else "live model matched evaluation"
+    write_json(destination, "runs.json", rows)
+    write_json(destination, "comparison.json", comparison)
+    write_csv(destination, "runs.csv", rows)
+    (destination / "report.html").write_text(render_comparison_report(comparison), encoding="utf-8")
+    write_json(destination, "config.json", config)
+    write_json(destination, "manifest.json", {**build_manifest(destination, ("config.json", "runs.json", "comparison.json", "runs.csv", "report.html")), "complete": complete})
+    return comparison
+
+
 def _run_scenario(root: Path, fixture: DockerFixture, scenario: str, version: str, model: Any,
                  artifacts: Path, *, offline: bool) -> dict[str, Any]:
     from .tracing import traced_operation, tracing_status
@@ -63,7 +123,7 @@ def _run_scenario(root: Path, fixture: DockerFixture, scenario: str, version: st
     contract = MigrationContract(identity=identity, clients=clients,
         scope=ApprovedScope(endpoint="https://fixture:8443/health", writable_paths=("config.json",),
                             allowed_tools=tuple(TOOLS), allow_restart=True, allow_rollback=True),
-        budgets=Budgets(max_steps=16, max_errors=3, max_tool_calls=24, max_tokens=24000,
+        budgets=Budgets(max_steps=16, max_errors=3, max_tool_calls=24, max_tokens=64000,
                         max_duration_seconds=600, max_cost_usd=float(os.getenv("INVARIS_MAX_SPEND_USD", "0"))),
         approval_candidate_id=TARGET_DIGEST)
     impossible_policy = any(client.required and client.expected_group != contract.target_group for client in contract.clients)
@@ -102,7 +162,7 @@ def _run_scenario(root: Path, fixture: DockerFixture, scenario: str, version: st
         "run_id": run_id, "scenario_id": scenario, "version": getattr(model, "comparison_arm", version), "status": result.status.value,
         "claims_readiness": result.claimed_status is not None and result.claimed_status.value == "VERIFIED",
         "policy_id": "strict-hybrid-v1", "model_id": getattr(model, "model", getattr(model, "label", "unknown")),
-        "budget_id": "16steps-24tools-24000tokens-600seconds", "infrastructure_valid": offline or ("input_tokens" in usage and "output_tokens" in usage and "model error budget" not in result.reason),
+        "budget_id": "16steps-24tools-64000tokens-600seconds", "infrastructure_valid": offline or ("input_tokens" in usage and "output_tokens" in usage and "model error budget" not in result.reason),
         "verified": independent.get("verified") is True, "evaluator_status": independent["status"],
         "policy_conflict_evidence": independent.get("policy_conflict_evidence", False),
         "changed_files": int(final_config["config_digest"] != baseline["config_digest"] or any(event["name"] == "apply_candidate" and event["receipt"].get("ok") for event in executor.events)),
@@ -164,6 +224,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             command.add_argument("--repetitions", type=int, choices=range(1, 6), default=1)
             command.add_argument("--include-held-out", action="store_true")
+            command.add_argument("--resume-evaluation", type=Path, help="Resume a compatible persisted evaluation directory")
     business = commands.add_parser("business", help="Prepare measured assumptions for cfo.ai, not a fabricated export")
     business.add_argument("--results", type=Path, required=True)
     business.add_argument("--output", type=Path, default=Path("business/assumptions.json"))
@@ -185,7 +246,12 @@ def main(argv: list[str] | None = None) -> int:
             return 0 if valid else 1
         if arguments.command == "doctor":
             from .integrations import check_integrations
-            _json([asdict(check) for check in check_integrations(neatlogs_probe=arguments.probe_neatlogs)])
+            evidence = {
+                "entire": (root / "docs" / "evidence" / "entire-checkpoint.json",
+                           root / "docs" / "evidence" / "entire-graph.json"),
+                "cfo.ai": (root / "business" / "cfo-review.md", root / "business" / "README.md"),
+            }
+            _json([asdict(check) for check in check_integrations(evidence=evidence, neatlogs_probe=arguments.probe_neatlogs)])
             return 0
         if arguments.command == "business":
             from .business import build_business_assumptions
@@ -211,35 +277,50 @@ def main(argv: list[str] | None = None) -> int:
         from .tracing import configure_tracing, flush_tracing, shutdown_tracing
         configure_tracing(workflow_name="tls-migration" if arguments.command == "run" else "migration-comparison")
         tracing_started = True
-        fixture.up()
         artifacts = Path(arguments.artifacts).resolve()
+        if arguments.command == "evaluate":
+            scenarios = SCENARIOS if arguments.include_held_out else SCENARIOS[:-1]
+            config = _evaluation_config(root, arguments, scenarios)
+            if arguments.resume_evaluation:
+                destination = arguments.resume_evaluation.resolve()
+                manifest_path = destination / "manifest.json"
+                if not manifest_path.is_file():
+                    raise ValueError("persisted evaluation manifest is missing")
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                if not isinstance(manifest, dict) or not verify_manifest(destination, manifest):
+                    raise ValueError("persisted evaluation manifest is invalid")
+                persisted = json.loads((destination / "config.json").read_text(encoding="utf-8"))
+                if persisted != config:
+                    raise ValueError("evaluation configuration is incompatible with this resume request")
+                rows = _validate_evaluation_rows(json.loads((destination / "runs.json").read_text(encoding="utf-8")), scenarios, arguments.repetitions)
+                if manifest.get("complete") is True:
+                    raise ValueError("evaluation is already complete")
+            else:
+                destination = artifacts / "evaluations" / str(uuid.uuid4())
+                rows = []
+                write_json(destination, "config.json", config)
+                _checkpoint_evaluation(destination, rows, config, False)
+            fixture.up()
+            live_model = None if arguments.offline else _model(arguments, "V1")
+            for arm in ("V1", "V2", "Fixed script"):
+                version = "V2" if arm == "Fixed script" else arm
+                for scenario in scenarios:
+                    existing = sum(row.get("version") == arm and row.get("scenario_id") == scenario for row in rows)
+                    for _ in range(existing, arguments.repetitions):
+                        scripted = arguments.offline or arm == "Fixed script"
+                        model = FixedBaselineModel() if arm == "Fixed script" else FixtureSmokeModel(version) if arguments.offline else live_model
+                        rows.append(run_scenario(root, fixture, scenario, version, model, artifacts, offline=scripted))
+                        _checkpoint_evaluation(destination, rows, config, False)
+            comparison = _checkpoint_evaluation(destination, rows, config, True)
+            _json({"mode": comparison["mode"], "output": str(destination), "V1": {key: value for key, value in comparison["summaries"]["V1"].items() if key != "rows"},
+                   "V2": {key: value for key, value in comparison["summaries"]["V2"].items() if key != "rows"},
+                   "Fixed script": {key: value for key, value in comparison["summaries"]["Fixed script"].items() if key != "rows"}})
+            return 0
+        fixture.up()
         if arguments.command == "run":
             row = run_scenario(root, fixture, arguments.scenario, arguments.version, _model(arguments, arguments.version), artifacts, offline=arguments.offline)
             _json(row)
             return 0 if row["verified"] or row["evaluator_status"] in {"BLOCKED", "UNVERIFIED"} else 1
-        versions: dict[str, list[dict]] = {"V1": [], "V2": [], "Fixed script": []}
-        scenarios = SCENARIOS if arguments.include_held_out else SCENARIOS[:-1]
-        live_model = None if arguments.offline else _model(arguments, "V1")
-        for arm in versions:
-            version = "V2" if arm == "Fixed script" else arm
-            for scenario in scenarios:
-                for _ in range(arguments.repetitions):
-                    scripted = arguments.offline or arm == "Fixed script"
-                    model = FixedBaselineModel() if arm == "Fixed script" else FixtureSmokeModel(version) if arguments.offline else live_model
-                    versions[arm].append(run_scenario(root, fixture, scenario, version, model, artifacts, offline=scripted))
-        comparison = compare_runs(versions["V1"], versions["V2"], versions["Fixed script"])
-        comparison["mode"] = "offline smoke, NOT evidence of live LLM improvement" if arguments.offline else "live model matched evaluation"
-        destination = artifacts / "evaluations" / str(uuid.uuid4())
-        all_rows = versions["V1"] + versions["V2"] + versions["Fixed script"]
-        write_json(destination, "runs.json", all_rows)
-        write_json(destination, "comparison.json", comparison)
-        write_csv(destination, "runs.csv", all_rows)
-        (destination / "report.html").write_text(render_comparison_report(comparison), encoding="utf-8")
-        write_json(destination, "manifest.json", build_manifest(destination, ("runs.json", "comparison.json", "runs.csv", "report.html")))
-        _json({"mode": comparison["mode"], "output": str(destination), "V1": {key: value for key, value in comparison["summaries"]["V1"].items() if key != "rows"},
-               "V2": {key: value for key, value in comparison["summaries"]["V2"].items() if key != "rows"},
-               "Fixed script": {key: value for key, value in comparison["summaries"]["Fixed script"].items() if key != "rows"}})
-        return 0
     except Exception as error:
         _json({"error": type(error).__name__, "message": str(error)[:1500]})
         return 2

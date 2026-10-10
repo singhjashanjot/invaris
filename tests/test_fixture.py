@@ -42,6 +42,13 @@ def test_mutation_carries_approved_identity_to_locked_controller():
     assert command[-2:] == ["--expected-instance", "approved-instance"]
 
 
+def test_build_uses_quiet_compose_flag():
+    fixture = object.__new__(DockerFixture)
+    fixture._command = Mock(return_value=SimpleNamespace(stdout="", stderr="", returncode=0))
+    fixture.build()
+    assert fixture._command.call_args.args[0] == ["build", "--quiet", "init"]
+
+
 @pytest.mark.parametrize("value,exit_code", [
     ({"connected": "false", "verify_ok": True}, 0),
     ({"connected": True, "verify_ok": True, "fresh": "true", "session_reused": False, "application": {}}, 0),
