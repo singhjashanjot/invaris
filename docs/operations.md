@@ -1,108 +1,81 @@
 # Invaris operator guide
 
-## Boundary and current status
+## Current verified status
 
-This release operates only on the owned disposable TLS fixture. It does not migrate arbitrary production services, change certificate authentication to post-quantum signatures, or prove whole-stack quantum safety. The target is a fresh authenticated TLS 1.3 connection using `X25519MLKEM768`, with the supported application response and approved client expectations intact.
+This is a sandbox release for the owned disposable TLS fixture. It does not migrate arbitrary production services, change certificate authentication to post-quantum signatures, or establish whole-system quantum safety. Fresh authenticated TLS 1.3 key exchange and the supported application response are checked against the fixture contract.
 
-The source implementation is present. Local tests provide component evidence; they do not prove live-model improvement, external partner completion, or production readiness. A fresh Python 3.12 virtual environment installed the lock and editable package successfully, passed dependency consistency checks, and passed 134 unit tests plus six subtests on October 11, 2026. Ruff passed. Seven integration tests were deliberately deselected. The fixture image rebuilt successfully, including compilation with warnings treated as errors. After the tracing setup request, the application and integration suite have not been run again; the existing running sandbox can still use an older image. Run `setup` yourself before verifying the latest application. Independent clean-machine and current-image runtime validation remain release gates.
+As of October 11, 2026, the current test baseline passed 150 tests plus 9 subtests, with 7 real integration tests; Ruff and the pip audit passed. Full integration CI run `38087724134` succeeded on commit `08cb143`. The current-image setup ran and confirmed OpenSSL 3.5.9. Fresh-machine setup remains an open gate.
 
-## Prerequisites and installation
+A matched live evaluation with 3 repetitions, 7 scenarios, and 3 arms is running in `artifacts/evaluations/090330bb-2602-4397-9b7e-c6bc13e29d0d`. The earlier 3-repetition run stopped after 26 completed rows and one incomplete row; it is preserved as exploratory evidence and its partial results are not final scores.
 
-- Python 3.12 or newer, with a virtual environment.
-- Docker Engine with Compose and Linux containers, directly or through WSL on Windows. The Windows adapter uses the default WSL distribution if native Docker is unavailable.
-- Network access to download the pinned image, verified OpenSSL source, and Python packages.
-- Optional live mode: model credential, model selection, explicit token prices, and an authorized total USD estimate cap.
+## Prerequisites and setup
 
-From the repository root, in PowerShell:
+- Python 3.12 or newer and a virtual environment.
+- Docker Engine with Compose and Linux containers, directly or through WSL on Windows.
+- Network access for pinned images, verified OpenSSL source, and Python packages.
+- Live mode additionally uses the already configured provider and the current authorized local estimate cap. Do not copy credentials or personalized endpoints into docs, reports, or command history.
+
+From the repository root in PowerShell:
 
 ```powershell
 py -3.12 -m venv .venv
 .venv\Scripts\python.exe -m pip install --upgrade pip
 .venv\Scripts\python.exe -m pip install -r requirements.lock
 .venv\Scripts\python.exe -m pip install --no-deps -e .
+.venv\Scripts\python.exe -m invaris setup
 ```
 
-On Linux use `python3.12` and `.venv/bin/python` instead. The lock pins versions but does not contain wheel hashes or constitute a supply-chain attestation. Fresh-machine setup is not yet independently validated.
+On Linux use `python3.12` and `.venv/bin/python`. The lock has no wheel hashes and is not a supply-chain attestation. Do not overwrite the ignored `.env` with `.env.example` or expose credential values.
 
-The ignored `.env` contains local credentials. Preserve the existing file; do not overwrite it with `.env.example`. The CLI loads `.env` before tracing and provider initialization. Never put secrets in command arguments, public bundles, screenshots, or commits.
-
-## Commands the operator runs
-
-Review the README scope before authorizing changes. `setup` builds the fixture and initializes its ephemeral CA and owned volumes:
+## Implemented commands
 
 ```powershell
-.venv\Scripts\python.exe -m invaris setup
 .venv\Scripts\python.exe -m invaris run --offline --approve-sandbox --scenario wrong_active_group
 .venv\Scripts\python.exe -m invaris evaluate --offline --approve-sandbox --include-held-out
+.venv\Scripts\python.exe -m invaris evaluate --resume-evaluation artifacts/evaluations/090330bb-2602-4397-9b7e-c6bc13e29d0d
 ```
 
-`--offline` is an explicitly scripted smoke model. Its comparison is NOT live agent-improvement evidence.
+Offline mode is a scripted smoke model, not evidence of live agent improvement. The evaluation has V1, V2, and a deterministic fixed-script arm; the latter invokes no model. The running matched live evaluation should be resumed with `--resume-evaluation <directory>`; do not restart it as a fresh evaluation. Resume requires the integrity manifest and binds semantic source hashes, effective model, rates, budget, and scenarios. It does not reset project spend. The total configured limits for both versions are 64k tokens, 16 steps, 24 tool calls, and 600 seconds.
 
-Every evaluation also runs a separate `Fixed script` arm using deterministic supported remediation under the same scoped tools and independent verifier. That arm never invokes a language model, records zero model tokens/inference cost, and is labeled `fixed-script-baseline-not-LLM`. V1/V2 offline smoke arms are still scripts, not live agents. The report exposes all three arms, denominators, readiness claims versus gated agent status, control mismatches, and unmatched attempts.
+## Live model, rates, and ledger
 
-Live mode omits `--offline` and requires these settings in `.env`:
+The live gateway is configured for Claude Haiku; its effective Bedrock model is Haiku 4.5. The current authorized local estimate cap is $10. The provider's remote cap of $20 rejects a key update with HTTP 401; do not describe that remote cap as usable authorization or include endpoint/credential details in public documentation.
 
-```text
-INVARIS_MODEL=<approved model identifier>
-OPENAI_API_KEY=<local credential>
-OPENAI_BASE_URL=<optional HTTPS compatible provider endpoint>
-INVARIS_MAX_SPEND_USD=<explicitly authorized total estimate cap>
-INVARIS_INPUT_USD_PER_MILLION=<explicit input token price>
-INVARIS_OUTPUT_USD_PER_MILLION=<explicit output token price>
-```
+The local ledger uses conservative configured rates of $2.20 per million input tokens and $5.50 per million output tokens. Gateway metadata reports ordinary input at $1.10 and output at $5.50; the configured input rate uses the higher cache-write rate. These are conservative local estimates, not a provider invoice or guaranteed billing ceiling. `LITELLM_API_KEY` is a fallback only for a custom base URL when `OPENAI_API_KEY` is absent.
 
-No model identifier, price, or spending authorization is inferred. The project ledger in `artifacts/private/model-spend.json` reserves estimated spend before network calls and retains uncertain reservations. Do not reset it to silently extend authorization. Estimates are not provider invoices or a guaranteed billing ceiling. A project file lock prevents parallel paid runs.
+The ledger at `artifacts/private/model-spend.json` reserves estimated spend before network calls and retains uncertain reservations. Never reset it to extend authorization. A project file lock prevents parallel paid runs. See the current manifest and ledger before resuming or starting another paid workload.
 
-Each scenario resets the named fixture; never run two workflows against the same fixture project concurrently. Use separate `invaris-*` project names if isolation is required. Agent mutations recheck the approved instance and candidate digest inside the fixture control lock before changing state. Corrupted configurations are rejected before stopping the running server. TLS transport failure is not treated as proof that the strict classical client was rejected. Neither the TLS endpoint nor the private fixture network is exposed publicly. The Docker build context is allowlisted to fixture sources, excluding `.env` and private artifacts.
+## Isolation and result review
 
-## Results and review
+Each scenario resets the named fixture; do not run concurrent workflows against the same fixture project. Mutations recheck the approved instance and candidate digest under the fixture control lock. Corrupt configurations are rejected before stopping the server. TLS transport failure alone does not prove that a strict classical client was rejected. Neither the TLS endpoint nor private fixture network is exposed publicly; the Docker build context excludes `.env` and private artifacts.
 
-Run artifacts are under `artifacts/runs/<run-id>`. They include the approved contract, baseline, sanitized implementation snapshot and original source hashes, agent/tool history, independent verification, rollback/reapplication evidence, result, HTML report, checkpoint, and integrity manifest. The snapshot excludes `.env` and local credentials; original hashes are not signed provenance, and redacted source text can differ from the hashed bytes. Evaluation artifacts are under `artifacts/evaluations/<comparison-id>`, including all per-run rows, JSON comparison, CSV, report, and manifest. Generated run/evaluation artifacts are ignored by version control.
+Run artifacts live in `artifacts/runs/<run-id>` and evaluation outputs in `artifacts/evaluations/<comparison-id>`. Review the contract, candidate/source hashes, tool history, independent connection and application receipts, failed actions, rollback/reapplication evidence, statuses, and manifest. The manifest detects changes to listed bytes; it does not establish authenticity or completeness. `VERIFIED` means the declared fixture contract passed, not that production deployment is approved.
+
+To verify a run bundle:
 
 ```powershell
 .venv\Scripts\python.exe -m invaris verify-bundle --directory artifacts/runs/<run-id>
 ```
 
-The manifest checks the listed public artifact bytes, not their authenticity or completeness. It intentionally excludes private checkpoints. A malicious party who replaces both artifacts and manifest can recompute the hashes. Human review must also inspect receipt identity, fresh connection evidence, statuses, failed actions, rollback results, and limitations. `VERIFIED` means the declared fixture contract passed, not production deployment approval.
+## Partner evidence and business model
 
-Core checkpoint save/resume behavior is tested at the library level. There is no operator CLI resume command yet; do not edit checkpoint JSON or replay interrupted mutations manually. Missing evidence must remain `UNVERIFIED`, and incompatible required client policy must remain `BLOCKED`.
+- Neatlogs SDK readback verified real application trace `40733e2a561180a013f0a3bad929e3a0` with 9 spans, including 5 LLM spans; its trace status was `error`. Trace `4b821a1ab8e2fe622c7abd31cbd11f50` read back with 18 spans, including 7 LLM spans, and independently verified actual LLM tool use; the agent outcome is `UNVERIFIED` because its 24k token budget was exhausted. These are SDK readback-path results, not public CLI results. Live batch `090330` is still running with no final results; some batch traces remain processing or failed. The evidence JSON records pending/error attempts and will receive subsequent records.
+- Entire's seven Codex hooks await approval. One genuine local checkpoint was captured using the supported `entire session attach` recovery command and linked to the initial public commit. No hosted Entire GitHub App authorization or hosted checkpoint link is verified. Automatic hooks and session upload are not claimed.
+- The shared cfo.ai artifact was reviewed across all six pages and 39 Main Scenario months. The actual shared artifact is the source; no official export was needed. The $6 inference placeholder is not a measured cost. Cost reconciliation remains pending.
 
-## Partner evidence
-
-- Neatlogs: SDK Doctor local and remote synthetic probe passed. Follow `neatlogs-tracing.md` to verify a real application trace; model capture needs a live run.
-- Entire: the verified local CLI binary is available under `.tools/entire`, but capture is not enabled. The workspace is not a Git repository; initialization, commits and publication need explicit authorization. Do not fabricate development checkpoints.
-- cfo.ai: the browser is still on its sign-in page. `business` prepares measured assumptions only, not a cfo.ai-generated plan. Pricing, costs, revenue and runway must come from a real approved planning session/export.
+The project directory itself should provide the current business command usage and evaluation inputs:
 
 ```powershell
 .venv\Scripts\python.exe -m invaris business --results artifacts/evaluations/<comparison-id>/runs.json
 ```
 
-The remaining external prerequisites were requested together: authorized model settings/spending, cfo.ai sign-in, Git/commit/publication permission, and public-post/video approval. Actual source eligibility and partner sharing must be confirmed before submission.
-
-## Validation and cleanup
-
-```powershell
-.venv\Scripts\python.exe -m pytest -m "not integration"
-.venv\Scripts\python.exe -m ruff check src tests
-.venv\Scripts\python.exe -m pip check
-$env:INVARIS_RUN_INTEGRATION="1"
-.venv\Scripts\python.exe -m pytest -m integration
-```
-
-Integration tests launch their own named disposable fixture projects. They are opt-in and do not call a live model. CI is configured but has not been executed on a hosted repository.
+## Cleanup and release gates
 
 ```powershell
 .venv\Scripts\python.exe -m invaris cleanup
 .venv\Scripts\python.exe -m invaris cleanup --delete-volumes
 ```
 
-The first command preserves owned state; the second explicitly deletes the selected owned volumes, including the ephemeral CA and fixture state. Neither command is a global Docker prune.
+The second command deletes selected owned volumes, including ephemeral CA and fixture state; neither is a global Docker prune.
 
-## Release gates still open
-
-1. Start the rebuilt fixture, verify its current-image runtime behavior, and reproduce setup on an independent clean machine.
-2. Real live-model baseline and improved matched evaluation, retaining all attempts.
-3. Actual application traces with failed-action recovery and trace-informed change.
-4. Entire development evidence and genuine cfo.ai export.
-5. Authorized public repository, sanitized public progress, and under-three-minute demo.
-6. Independent security/cryptographic review before any expansion beyond the sandbox.
+Still open: finish and review the matched live evaluation; obtain completed readback for pending traces; reproduce setup on a fresh machine; complete the desired hosted Entire integration; reconcile measured inference cost; and conduct independent security/cryptographic review before any production expansion. Public submission, social posts, and demo publication are explicitly deferred. This is not an enterprise production release or a complete quantum-safe solution.

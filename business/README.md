@@ -1,20 +1,16 @@
-# Invaris business evidence
+# Business evidence
 
-## Actual cfo.ai shared artifact
+## CFO model review
 
-- User-provided share: https://cfo.ai/s/aMAZiEnSXtphYplP
-- Application share: https://app.cfo.ai/s/aMAZiEnSXtphYplP
-- Public preview title: How could Invaris move from a sandbox prototype to recurring enterprise revenue?
-- Public preview last updated: 2026-10-10T20:31:34.443494Z.
-- Public preview describes qualified opportunities, pilots, recurring enterprise contracts, revenue, margins, burn and runway. It explicitly notes prototype status, no validated customers or revenue, and pending inference-cost input.
+The user-shared [cfo.ai model](https://cfo.ai/s/aMAZiEnSXtphYplP) was reviewed in the browser across all six visible model pages and all 39 rendered Main Scenario months (October 2026–December 2029). This is a browser-observed review, not an official API or XLSX export. The review, including the model's assumptions, checks, limitations, and a clearly separated local sensitivity, is in [cfo-review.md](cfo-review.md).
 
-The share and its preview were accessible without authentication. The full financial model was not extracted or reviewed: the application renders an opening-link screen and requires client-side navigation. This file is a source inventory, not an exported cfo.ai plan or a claim that its calculations have been validated.
+The model describes a sandbox prototype with no validated customers or revenue. Its forecasts are assumptions, not traction or measured unit economics. The review found a date-label mismatch between the overview/assumptions/roster pages (January 2026–December 2027) and the forecast (October 2026–December 2029). The overview also mentions Downside and Upside, while the visible scenario selector exposes only Main; those scenarios are therefore unverified.
 
-## Evidence to retain
+## Evidence to retain and refresh
 
-1. Actual plan output or export from the user-owned cfo.ai session.
-2. Sanitized screenshots connecting the Invaris planning conversation to its resulting model.
-3. Measured live-run inference costs, separately labeled from pricing, acquisition, staffing and support assumptions.
-4. A revision of the plan incorporating those measured costs, with base/downside scenarios and documented product decisions.
+1. Preserve sanitized screenshots or a user-provided official export if a durable audit trail is needed; do not describe this browser review as an export.
+2. Measure live inference cost and record workload, model/provider, volume, and measurement window. The current measured field is $0 and marked “PENDING - using placeholder”; $6 is a placeholder, not a validated all-in COGS estimate.
+3. Reconcile the model's date labels and publish accessible, documented scenario cases before relying on downside or upside claims.
+4. Revisit pilot conversion, contract conversion, churn, hiring timing, collections, and cash needs as evidence arrives.
 
-Keep billing details, personal account information, credentials and confidential customer data out of shared artifacts. Do not fabricate an export or treat the public preview as the complete financial plan.
+Keep billing details, personal account information, credentials, and confidential customer data out of shared artifacts.

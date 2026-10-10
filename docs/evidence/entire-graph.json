@@ -1,0 +1,204 @@
+{
+  "schema": "invaris.entire-graph-evidence/v1",
+  "captured_at": "2026-10-10T21:22:22.198Z",
+  "doctor": {
+    "environment": {
+      "ENTIRE_CLI_VERSION": "0.11.4",
+      "ENTIRE_PLUGIN_DATA_DIR": "<user-home>\\AppData\\Local\\entire\\plugins\\data\\graph",
+      "ENTIRE_REPO_ROOT": "D:/neatlogs"
+    },
+    "no_egress": true,
+    "phase_1_local_only": {
+      "call_hosted_model_apis": false,
+      "call_remote_embedding_provider": false,
+      "download_grammars_or_assets": false,
+      "fetch_remote_code": false,
+      "perform_network_discovery": false,
+      "upload_telemetry": false
+    },
+    "plugin_data_dir": "writable",
+    "provider": "entire-graph",
+    "repo_root": "D:/neatlogs",
+    "version": "v0.4.0"
+  },
+  "query": "Agent tool messages serialized by provider and verified by controller",
+  "query_exit_code": 0,
+  "result": {
+    "query": "Agent tool messages serialized by provider and verified by controller",
+    "repo_root": "D:\\neatlogs",
+    "commit": "166c1b96800345721863c8e1ae6b26f7e8eb86c5",
+    "tree": "0d88deda7d67042905722ad921a18d609dee23ff",
+    "profile": "fast",
+    "results": [
+      {
+        "rank": 1,
+        "score": 32.8284,
+        "file_path": "src/invaris/tracing.py",
+        "start_line": 51,
+        "end_line": 60,
+        "focus_line": 51,
+        "snippet_start_line": 51,
+        "snippet_end_line": 60,
+        "symbol_start_line": 51,
+        "symbol_end_line": 60,
+        "language": "Python",
+        "kind": "function",
+        "symbol_id": "gh/singhjashanjot/invaris:Python:src/invaris/tracing.py:function:_serialized",
+        "symbol_name": "_serialized",
+        "qualified_name": "_serialized",
+        "signature": "def _serialized(value: Any) -> str",
+        "signals": [
+          "body",
+          "symbol-name",
+          "graph:callers",
+          "complete-symbol"
+        ],
+        "snippet": "def _serialized(value: Any) -> str:\n    from .evidence import redact_secrets\n\n    sanitized = redact_secrets(value)\n    encoded = json.dumps(sanitized, ensure_ascii=False, default=str)\n    if len(encoded) > 16384:\n        encoded = json.dumps(\n            {\"truncated\": True, \"preview\": encoded[:16000]}, ensure_ascii=False\n        )\n    return encoded"
+      },
+      {
+        "rank": 2,
+        "score": 33.2958,
+        "file_path": "tests/test_providers.py",
+        "start_line": 40,
+        "end_line": 60,
+        "focus_line": 40,
+        "snippet_start_line": 40,
+        "snippet_end_line": 60,
+        "symbol_start_line": 40,
+        "symbol_end_line": 60,
+        "language": "Python",
+        "kind": "method",
+        "symbol_id": "gh/singhjashanjot/invaris:Python:tests/test_providers.py:method:ProviderTests.test_internal_tool_history_is_serialized_without_mutation",
+        "symbol_name": "test_internal_tool_history_is_serialized_without_mutation",
+        "qualified_name": "ProviderTests.test_internal_tool_history_is_serialized_without_mutation",
+        "signature": "def test_internal_tool_history_is_serialized_without_mutation(self)",
+        "signals": [
+          "path",
+          "body",
+          "symbol-name",
+          "complete-symbol"
+        ],
+        "snippet": "    def test_internal_tool_history_is_serialized_without_mutation(self):\n        messages = [\n            {\"role\": \"assistant\", \"content\": \"Inspecting\", \"tool_calls\": [\n                {\"id\": \"inspect-1\", \"name\": \"inspect_service\", \"arguments\": {\"target\": \"fixture\"}}\n            ]},\n            {\"role\": \"tool\", \"tool_call_id\": \"inspect-1\", \"content\": {\"ok\": True}},\n        ]\n        completions = StubCompletions({\n            \"choices\": [{\"message\": {\"content\": \"UNVERIFIED: inspection only\"}}],\n            \"usage\": {\"prompt_tokens\": 20, \"completion_tokens\": 5},\n        })\n        self._provider(StubClient(completions)).next(messages, [])\n        wire = completions.kwargs[\"messages\"]\n        self.assertEqual(wire[0][\"tool_calls\"][0], {\n            \"id\": \"inspect-1\", \"type\": \"function\", \"function\": {\n                \"name\": \"inspect_service\", \"arguments\": '{\"target\": \"fixture\"}'\n            }\n        })\n        self.assertEqual(wire[1][\"content\"], '{\"ok\": true}')\n        self.assertEqual(messages[0][\"tool_calls\"][0][\"name\"], \"inspect_service\")\n        self.assertEqual(messages[1][\"content\"], {\"ok\": True})"
+      },
+      {
+        "rank": 3,
+        "score": 30.7262,
+        "file_path": "src/invaris/providers.py",
+        "start_line": 42,
+        "end_line": 60,
+        "focus_line": 42,
+        "snippet_start_line": 42,
+        "snippet_end_line": 60,
+        "symbol_start_line": 42,
+        "symbol_end_line": 60,
+        "language": "Python",
+        "kind": "function",
+        "symbol_id": "gh/singhjashanjot/invaris:Python:src/invaris/providers.py:function:_wire_messages",
+        "symbol_name": "_wire_messages",
+        "qualified_name": "_wire_messages",
+        "signature": "def _wire_messages(messages: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]",
+        "signals": [
+          "path",
+          "body",
+          "symbol-name",
+          "graph:callers",
+          "complete-symbol"
+        ],
+        "snippet": "def _wire_messages(messages: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:\n    converted = []\n    for original in messages:\n        message = dict(original)\n        if message.get(\"role\") == \"assistant\" and message.get(\"tool_calls\"):\n            calls = []\n            for original_call in message[\"tool_calls\"]:\n                call = dict(original_call)\n                if \"function\" not in call:\n                    call = {\"id\": call[\"id\"], \"type\": \"function\", \"function\": {\n                        \"name\": call[\"name\"],\n                        \"arguments\": json.dumps(call[\"arguments\"], ensure_ascii=False),\n                    }}\n                calls.append(call)\n            message[\"tool_calls\"] = calls\n        if message.get(\"role\") == \"tool\" and isinstance(message.get(\"content\"), Mapping):\n            message[\"content\"] = json.dumps(message[\"content\"], ensure_ascii=False)\n        converted.append(message)\n    return converted"
+      }
+    ],
+    "verify_command": {
+      "command": "python -m pytest tests/test_providers.py -k test_internal_tool_history_is_serialized_without_mutation",
+      "targets": "tests/test_providers.py",
+      "derived_from": "pyproject.toml pytest config + ranked test path",
+      "tier": "narrow"
+    },
+    "stats": {
+      "files_scanned": 63,
+      "preselection_backend": "inventory",
+      "preselection_passes": 1,
+      "preselection_files_examined": 63,
+      "files_content_read_during_preselection": 0,
+      "files_content_read_during_query": 63,
+      "bytes_content_read_during_query": 352804,
+      "files_indexed": 63,
+      "symbols_considered": 569,
+      "lexical_candidates": 335,
+      "graph_candidates": 18,
+      "caller_boosted_candidates": 39,
+      "identifier_usage_candidates": 32,
+      "same_container_neighbor_candidates": 19,
+      "same_file_bridge_candidates": 4,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 3,
+      "result_bytes": 4432,
+      "context_budget_bytes": 5000,
+      "complete_symbol_snippets": 3,
+      "verify_command_bytes": 415,
+      "verify_tier": "narrow",
+      "context_block_bytes": 415,
+      "index_cache_hit": false,
+      "index_latency_ms": 496,
+      "query_latency_ms": 137,
+      "total_latency_ms": 779,
+      "search_latency_ms": 779,
+      "preselect_latency_ms": 145
+    },
+    "warnings": [
+      {
+        "code": "W_WORKTREE_SNAPSHOT",
+        "severity": "warning",
+        "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+    ],
+    "partial_failures": [],
+    "completeness": {
+      "languages": {
+        "C": {
+          "files": 2,
+          "symbols": 8
+        },
+        "Dockerfile": {
+          "files": 1,
+          "symbols": 2
+        },
+        "Git Ignore": {
+          "files": 2,
+          "symbols": 2
+        },
+        "JSON": {
+          "files": 3,
+          "symbols": 35
+        },
+        "Markdown": {
+          "files": 7,
+          "symbols": 88
+        },
+        "Python": {
+          "files": 42,
+          "symbols": 401
+        },
+        "TOML": {
+          "files": 1,
+          "symbols": 22
+        },
+        "YAML": {
+          "files": 2,
+          "symbols": 11
+        }
+      },
+      "relations": {
+        "CALLS": 187,
+        "CONFIGURES": 70,
+        "CONSTRUCTS": 144,
+        "CONTAINS": 188,
+        "DEFINES": 569,
+        "HANDLES_ROUTE": 4,
+        "HANDLES_TOOL": 7,
+        "IMPORTS": 373,
+        "RESOURCE_DEPENDS_ON": 2
+      }
+    }
+  }
+}

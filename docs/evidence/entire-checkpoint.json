@@ -1,0 +1,28 @@
+{
+  "schema": "invaris.entire-checkpoint-evidence/v1",
+  "captured_at": "2026-10-10T21:22:22.197Z",
+  "verification_command": "entire checkpoint explain HEAD --json",
+  "metadata": {
+    "checkpoint_id": "01M4KTRF7AXH7GGZ0YQWQ4NABJ",
+    "strategy": "manual-commit",
+    "checkpoints_count": 1,
+    "session_count": 1,
+    "sessions": [
+      {
+        "index": 0,
+        "session_id": "01a12796-299f-75b3-961f-52226f14e5b2",
+        "agent": "Codex",
+        "created_at": "2026-10-10T21:16:01.8091007Z",
+        "token_usage": {
+          "input_tokens": 8125,
+          "cache_creation_tokens": 0,
+          "cache_read_tokens": 93696,
+          "output_tokens": 1521,
+          "api_call_count": 6
+        }
+      }
+    ],
+    "tasks": []
+  },
+  "note": "Genuine isolated development session attached using Entire supported recovery command; automatic hook approval is not claimed. Session uploads remain disabled."
+}

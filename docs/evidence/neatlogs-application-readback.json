@@ -1,0 +1,339 @@
+{
+  "schema": "invaris.neatlogs-application-readback/v1",
+  "verified_at": "2026-10-10T21:33:07.453Z",
+  "verification_path": "Installed SDK Doctor trace-read endpoint and project SDK credential; actual application trace IDs, not synthetic probes and not public CLI OAuth.",
+  "records": [
+    {
+      "run_id": "038578e0-7aea-4457-bbb5-facad2a22bc6",
+      "scenario": "one_shot_action_failure",
+      "agent_version": "V1",
+      "local_agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "49427a8e2051e9c1a3bdef5d7ab6eb62",
+      "http_status": 409,
+      "observed_span_count": 0,
+      "checks": {
+        "exact_trace": false,
+        "exact_project": false,
+        "one_root": false,
+        "unique_span_ids": true,
+        "parents_present": true,
+        "llm_present": false
+      },
+      "spans": []
+    },
+    {
+      "run_id": "0461e77c-f652-43ca-b991-629c8ecef299",
+      "scenario": "wrong_active_group",
+      "agent_version": "V2",
+      "local_agent_status": "VERIFIED",
+      "independent_status": "VERIFIED",
+      "trace_id": "c481d5613a9bc65a9c055ca000cc3ce9",
+      "http_status": 202,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "trace_status": "processing",
+      "observed_span_count": 0,
+      "checks": {
+        "exact_trace": true,
+        "exact_project": true,
+        "one_root": false,
+        "unique_span_ids": true,
+        "parents_present": true,
+        "llm_present": false
+      },
+      "spans": []
+    },
+    {
+      "trace_id": "40733e2a561180a013f0a3bad929e3a0",
+      "http_status": 200,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "trace_status": "error",
+      "remote_span_count": 9,
+      "observed_span_count": 9,
+      "remote_llm_calls": 5,
+      "remote_tool_calls": 2,
+      "prompt_tokens": 1556,
+      "completion_tokens": 89,
+      "checks": {
+        "exact_trace": true,
+        "exact_project": true,
+        "one_root": true,
+        "unique_span_ids": true,
+        "parents_present": true,
+        "llm_present": true
+      },
+      "spans": [
+        {
+          "id": "e6a039daace2b599",
+          "parent": null,
+          "name": "invaris.run",
+          "type": "workflow",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "914de756add7c7d3",
+          "parent": "e6a039daace2b599",
+          "name": "invaris.migration.V1",
+          "type": "workflow",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "e3a45bd15b30acab",
+          "parent": "914de756add7c7d3",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "ERROR",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "5e995f77bea61dfd",
+          "parent": "914de756add7c7d3",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "6e3f6997a7684636",
+          "parent": "914de756add7c7d3",
+          "name": "inspect_service",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "a1d2328df35cc87d",
+          "parent": "914de756add7c7d3",
+          "name": "inspect_capabilities",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "b4b624580b32e421",
+          "parent": "914de756add7c7d3",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "ERROR",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "f76ba0a14fbf6143",
+          "parent": "914de756add7c7d3",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "ERROR",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "a9c64dce60650942",
+          "parent": "914de756add7c7d3",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "ERROR",
+          "input_present": true,
+          "output_present": true
+        }
+      ]
+    },
+    {
+      "trace_id": "4b821a1ab8e2fe622c7abd31cbd11f50",
+      "http_status": 200,
+      "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+      "trace_status": "success",
+      "remote_span_count": 18,
+      "observed_span_count": 18,
+      "remote_llm_calls": 7,
+      "remote_tool_calls": 9,
+      "prompt_tokens": 25985,
+      "completion_tokens": 962,
+      "checks": {
+        "exact_trace": true,
+        "exact_project": true,
+        "one_root": true,
+        "unique_span_ids": true,
+        "parents_present": true,
+        "llm_present": true
+      },
+      "spans": [
+        {
+          "id": "33973ff9cfe6b256",
+          "parent": null,
+          "name": "invaris.run",
+          "type": "workflow",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "90f75ea9b50c849e",
+          "parent": "33973ff9cfe6b256",
+          "name": "invaris.migration.V2",
+          "type": "workflow",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "b06b1e18ec7f940b",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "e86c752ceaa7a9e4",
+          "parent": "90f75ea9b50c849e",
+          "name": "inspect_service",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "b3444789304dec61",
+          "parent": "90f75ea9b50c849e",
+          "name": "inspect_capabilities",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "e6f7156815c70673",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "ca3fbff86af6efae",
+          "parent": "90f75ea9b50c849e",
+          "name": "stage_config_change",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "c51db6758b5c3371",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "b153db71e4674532",
+          "parent": "90f75ea9b50c849e",
+          "name": "apply_candidate",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "4b9ab424d63c3e28",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "0112552fbec544d4",
+          "parent": "90f75ea9b50c849e",
+          "name": "restart_service",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "a58064c02c9dfc3e",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "c8cbf809b06d3799",
+          "parent": "90f75ea9b50c849e",
+          "name": "probe_connection",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "9bfcfa236b98f7c6",
+          "parent": "90f75ea9b50c849e",
+          "name": "check_application",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "44441f448b6f7d95",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "0d1e747dad7c0915",
+          "parent": "90f75ea9b50c849e",
+          "name": "collect_evidence",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "1aa2083ae4fd4c78",
+          "parent": "90f75ea9b50c849e",
+          "name": "claude-haiku",
+          "type": "llm",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        },
+        {
+          "id": "5d0ce4f6a4c5ef2d",
+          "parent": "33973ff9cfe6b256",
+          "name": "invaris.rollback_and_reverify",
+          "type": "tool_call",
+          "status": "SUCCESS",
+          "input_present": true,
+          "output_present": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "SDK pipeline readback verifies persisted tracing, not cryptographic correctness; independent verifier receipts provide that evidence.",
+    "Raw model responses and credentials are deliberately not copied."
+  ],
+  "all_records_verified": false
+}

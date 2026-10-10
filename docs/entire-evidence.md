@@ -1,25 +1,23 @@
 # Entire development evidence
 
-Official event guide: https://hack.entire.io/neathacks-2026/
+Entire evidence documents coding-agent development context linked to source history. It is not TLS verification, an Invaris runtime component, or proof of migration outcomes.
 
-## Intended integration
+## Verified local checkpoint
 
-Use Entire to connect genuine coding-agent development context to Git commits. Map an observed migration failure to the relevant source, implement a focused fix, preserve its tests and checkpoint context, then link the changed implementation to the subsequent evaluation. Entire is development provenance, not TLS verification or the migration runtime.
+The public GitHub repository's initial commit is `166c1b96800345721863c8e1ae6b26f7e8eb86c5` (short form `166c1b9`) with its actual timestamp. No history was backdated.
 
-The event guide requires both captured agent context and a Git commit for a normal committed checkpoint. It suggests an accessible checkpoint link and checkpoint ID as evidence. Graph and Brain can strengthen investigation if their supported setup is verified; Trails is optional, requires separate access and is not a prerequisite for the scoped project.
+The Entire Graph plugin's official `v0.4.0` Windows build works. Its doctor and query were verified with no egress for hosted models, remote embeddings, grammar/assets, remote code, network discovery, or telemetry. It queried saved source evidence in `docs/evidence/entire-graph.json`; the result associates the repository snapshot with commit `166c1b9`. The query demonstrates retrieval behavior, not measured token savings or agent-performance improvement.
 
-## Current verified local state
+Entire's seven Codex hooks remain awaiting approval, so automatic hook capture is not claimed. A genuine isolated agent session `01a12796-299f-75b3-961f-52226f14e5b2` was attached using the supported `entire session attach` command. It produced checkpoint `01M4KTRF7AXH7GGZ0YQWQ4NABJ`, linked to initial commit `166c1b9`; the saved checkpoint record is `docs/evidence/entire-checkpoint.json`. This is verified local capture. Hosted Entire GitHub App authentication and an accessible hosted checkpoint link are not yet available. Raw session uploads are not enabled or claimed.
 
-Git is initialized with the user-authorized GitHub origin. The installed Entire CLI reports enabled Codex integration, seven hooks awaiting approval, and automatic session uploads disabled. This does not establish that a development checkpoint has been captured.
+## Durable-evaluation development checkpoint
 
-Do not manufacture historical sessions or backdate commits. Preserve actual timestamps. Do not upload raw sessions that contain credentials; review and sanitize any partner-visible context before sharing it.
+Session `01a127ab-f2ef-70b1-b740-521377e433ee` implemented and reviewed the durable evaluation changes included in commit `08cb143219d60a2dffab053c5442f39189a1b611`. Supported local capture produced checkpoint `01M4KVMJ6YKJ44M0VJ662YKDW2`; `checkpoint explain` verified its metadata. See `docs/evidence/entire-evaluation-checkpoint.json`. The stored transcript was checked privately against configured API credentials and key-shaped patterns with no matches; this targeted scan is not a universal secret guarantee.
 
-## Remaining verification
+This checkpoint was captured after the implementation commit had already been pushed. No public history was rewritten, and that commit has no checkpoint trailer. This explicit mapping documents the real development context without claiming automatic hook capture or hosted sharing.
 
-1. Verify hook approval and executable discovery in the coding-agent process.
-2. Start a supported fresh coding session and make a real focused change after the initial repository commit.
-3. Inspect captured context and commit association using the installed CLI reference.
-4. Have the repository owner authorize/import the repository through the Entire GitHub App if an accessible hosted checkpoint is required.
-5. Record real checkpoint IDs and source/test/evaluation relationships. Keep public session uploads disabled until credentials and other sensitive content have been reviewed.
+## Evidence limits and next steps
 
-The event guide describes GitHub sign-in and app authorization for hosted repository access. Do not request or store GitHub passwords, OAuth tokens or card details in this repository. Submission and public demo work remain deferred at the user's request.
+The checkpoint records one session; it does not fabricate earlier development history or prove that all implementation changes were captured. The graph query and checkpoint are complementary local artifacts. Keep actual timestamps and distinguish local evidence from hosted sharing.
+
+Before claiming hosted integration, complete the repository owner's Entire GitHub App authorization and verify the resulting hosted checkpoint. If hook capture is enabled later, verify it in an actual supported session and review captured context for secrets before sharing. Submission and public demo publication remain explicitly deferred.

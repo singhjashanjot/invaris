@@ -2,9 +2,23 @@
 
 ## Verified cryptographic change.
 
-**Invaris Migration Engineer is a verified post-quantum TLS migration agent.** It inspects an authorized service fixture, plans and applies a bounded change, checks actual connection and application behavior, recovers from failed candidates, and produces a reviewable evidence bundle.
+**Invaris Migration Engineer is a sandbox TLS migration agent with independently checked post-quantum key exchange.** It inspects an authorized service fixture, plans and applies a bounded change, checks actual connection and application behavior, recovers from failed candidates, and produces a reviewable evidence bundle.
 
-**Status: implementation and validation in progress (October 11, 2026).** The Python agent, scoped tools, real TLS fixture, independent verifier, comparison/reporting code and Neatlogs tracing are implemented. The SDK Doctor remote probe is verified; an actual application trace, live-model comparison, Entire capture, cfo.ai export and fresh-machine reproduction remain unverified. This is not production-ready or submission-complete. This README remains the authoritative product scope; current operator commands and evidence boundaries are in `docs/operations.md`, and tracing verification is in `docs/neatlogs-tracing.md`. Invaris trademark/domain availability has not been checked.
+**Status: sandbox implementation with ongoing validation (October 11, 2026).** Offline validation currently passes 148 tests plus 9 subtests and Ruff. The current Docker image was set up and its OpenSSL 3.5.9 runtime confirmed. A matched live evaluation (3 repetitions, 7 scenarios, 3 arms) is running; an earlier interrupted run is exploratory only. Neatlogs SDK readback confirms two real application traces with substantial spans, with provider compatibility failure on one and an unverified second run whose agent exhausted its 24k token budget. Other batch traces remain processing or failed. Entire has one genuine local checkpoint linked to the initial public commit; hosted Entire GitHub App authorization is not complete. The cfo.ai shared six-page model was reviewed across 39 months. Fresh-machine CI validation remains pending. This remains a sandbox release, not enterprise production software or a complete quantum-safe migration. Submission and public demo work are deferred. See the operator and evidence docs for precise boundaries. Invaris trademark/domain availability has not been checked.
+
+## Current operator quickstart
+
+With the project virtual environment and Docker Compose ready, the implemented commands are:
+
+```powershell
+.venv\Scripts\python.exe -m invaris setup
+.venv\Scripts\python.exe -m invaris run --offline --approve-sandbox --scenario wrong_active_group
+.venv\Scripts\python.exe -m invaris evaluate --offline --approve-sandbox --include-held-out
+```
+
+The offline mode is a scripted smoke path, not live-agent evidence. To continue the currently running live evaluation without resetting project spend, use `evaluate --resume-evaluation artifacts/evaluations/090330bb-2602-4397-9b7e-c6bc13e29d0d`; resume requires its integrity manifest and checks semantic source hashes, effective model, rates, budget, and scenarios. See [docs/operations.md](docs/operations.md) before running live work.
+
+The numbered product, architecture, evaluation, and submission sections below retain the original design scope and intended future work. They describe the plan where a capability has not been verified; they are not a claim that every planned gate is complete.
 
 **Name and positioning:** Invaris draws from invariant: a property that must remain true while a system changes. The product changes cryptography while checking the service properties required by the approved contract. Brand: Invaris. Product: Invaris Migration Engineer. Positioning: verified cryptographic change.
 
