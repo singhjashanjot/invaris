@@ -9,6 +9,7 @@ import uuid
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from dotenv import load_dotenv
 
@@ -17,6 +18,7 @@ from .contracts import AgentVersion, ApprovedScope, Budgets, ClientProfile, Iden
 from .evaluation import compare_runs, summarize_runs, write_csv, write_json
 from .evidence import build_manifest, implementation_snapshot, redact_secrets, verify_manifest
 from .fixture import SCENARIOS, DockerFixture
+from .providers import _validate_base_url
 from .report import render_comparison_report, render_report
 from .smoke import FixedBaselineModel, FixtureSmokeModel
 from .tools import TOOLS, MigrationTools
@@ -56,13 +58,24 @@ def _evaluation_config(root: Path, arguments: argparse.Namespace, scenarios: tup
     fixture_sources = ("fixture/Dockerfile", "fixture/server.c", "fixture/probe.c", "fixture/control.py")
     fixture_root = root if all((root / name).is_file() for name in fixture_sources) else ROOT
     hashes.update({name: hashlib.sha256((fixture_root / name).read_bytes()).hexdigest() for name in fixture_sources})
-    live_settings = {} if arguments.offline else {
-        "model": (arguments.model or os.getenv("INVARIS_MODEL", "")).strip(),
-        "base_url": os.getenv("OPENAI_BASE_URL", ""),
-        "max_spend_usd": os.getenv("INVARIS_MAX_SPEND_USD", ""),
-        "input_usd_per_million": os.getenv("INVARIS_INPUT_USD_PER_MILLION", ""),
-        "output_usd_per_million": os.getenv("INVARIS_OUTPUT_USD_PER_MILLION", ""),
-    }
+    live_settings = {}
+    if not arguments.offline:
+        base_url = os.getenv("OPENAI_BASE_URL", "")
+        base_url_sha256 = None
+        base_url_origin = None
+        if base_url:
+            _validate_base_url(base_url)
+            parsed_base_url = urlsplit(base_url)
+            base_url_sha256 = hashlib.sha256(base_url.encode("utf-8")).hexdigest()
+            base_url_origin = f"{parsed_base_url.scheme}://{parsed_base_url.netloc}"
+        live_settings = {
+            "model": (arguments.model or os.getenv("INVARIS_MODEL", "")).strip(),
+            "base_url_sha256": base_url_sha256,
+            "base_url_origin": base_url_origin,
+            "max_spend_usd": os.getenv("INVARIS_MAX_SPEND_USD", ""),
+            "input_usd_per_million": os.getenv("INVARIS_INPUT_USD_PER_MILLION", ""),
+            "output_usd_per_million": os.getenv("INVARIS_OUTPUT_USD_PER_MILLION", ""),
+        }
     return {"schema": "invaris.matched-evaluation/v1", "offline": arguments.offline,
             "model": "offline-smoke" if arguments.offline else live_settings["model"],
             "live_settings": live_settings,

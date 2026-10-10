@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -175,6 +176,82 @@ def test_resume_rejects_changed_effective_model_from_environment(tmp_path):
         patch("invaris.tracing.shutdown_tracing"),
     ):
         assert cli.main(["evaluate", "--approve-sandbox", "--resume-evaluation", str(destination)]) == 2
+
+
+def test_evaluation_config_fingerprints_path_url_without_persisting_it(tmp_path):
+    secret_path = "private-path-credential"
+    base_url = f"https://provider.example/v1/{secret_path}"
+    environment = {"INVARIS_MODEL": "model-a", "OPENAI_BASE_URL": base_url,
+                   "INVARIS_MAX_SPEND_USD": "12", "INVARIS_INPUT_USD_PER_MILLION": "1.2",
+                   "INVARIS_OUTPUT_USD_PER_MILLION": "3.4"}
+    arguments = SimpleNamespace(offline=False, model=None, repetitions=1, include_held_out=False)
+    with patch.dict(os.environ, environment, clear=False):
+        config = cli._evaluation_config(tmp_path, arguments, SCENARIOS[:-1])
+    destination = tmp_path / "evaluation"
+    cli._checkpoint_evaluation(destination, [], config, False)
+    persisted = (destination / "config.json").read_text(encoding="utf-8")
+
+    assert secret_path not in persisted
+    assert base_url not in persisted
+    assert config["live_settings"]["base_url_sha256"] == hashlib.sha256(base_url.encode()).hexdigest()
+    assert config["live_settings"]["base_url_origin"] == "https://provider.example"
+
+
+def test_query_url_is_rejected_before_evaluation_artifacts_are_written(tmp_path, capsys):
+    secret_query = "query-credential"
+    environment = {"INVARIS_MODEL": "model-a", "OPENAI_BASE_URL": f"https://provider.example/v1?api_key={secret_query}"}
+    with (
+        patch.dict(os.environ, environment, clear=False), patch("invaris.cli.load_dotenv"),
+        patch.object(cli, "DockerFixture"), patch("invaris.tracing.configure_tracing"),
+        patch("invaris.tracing.flush_tracing"), patch("invaris.tracing.shutdown_tracing"),
+    ):
+        assert cli.main(["--root", str(tmp_path), "evaluate", "--approve-sandbox", "--artifacts", str(tmp_path / "artifacts")]) == 2
+
+    assert secret_query not in capsys.readouterr().out
+    assert not (tmp_path / "artifacts" / "evaluations").exists()
+
+
+def test_resume_accepts_same_endpoint_and_rejects_changed_endpoint(tmp_path):
+    class FakeFixture:
+        def __init__(self, root, project):
+            pass
+
+        def up(self):
+            pass
+
+    environment = {"INVARIS_MODEL": "model-a", "OPENAI_BASE_URL": "https://provider.example/v1",
+                   "INVARIS_MAX_SPEND_USD": "12", "INVARIS_INPUT_USD_PER_MILLION": "1.2",
+                   "INVARIS_OUTPUT_USD_PER_MILLION": "3.4"}
+    arguments = SimpleNamespace(offline=False, model=None, repetitions=1, include_held_out=False)
+    with patch.dict(os.environ, environment, clear=False):
+        config = cli._evaluation_config(tmp_path, arguments, SCENARIOS[:-1])
+    destination = tmp_path / "evaluation"
+    cli._checkpoint_evaluation(destination, [], config, False)
+    run_calls = []
+
+    def fake_run(root, fixture, scenario, version, model, artifacts, *, offline):
+        arm = getattr(model, "comparison_arm", version)
+        run_calls.append(arm)
+        return {"run_id": str(len(run_calls)), "scenario_id": scenario, "version": arm,
+                "status": "UNVERIFIED", "verified": False, "evaluator_status": "UNVERIFIED",
+                "infrastructure_valid": False, "claims_readiness": False}
+
+    with (
+        patch.dict(os.environ, environment, clear=False), patch("invaris.cli.load_dotenv"),
+        patch.object(cli, "DockerFixture", FakeFixture), patch.object(cli, "_model", return_value=SimpleNamespace()),
+        patch.object(cli, "run_scenario", side_effect=fake_run), patch("invaris.tracing.configure_tracing"),
+        patch("invaris.tracing.flush_tracing"), patch("invaris.tracing.shutdown_tracing"),
+    ):
+        assert cli.main(["--root", str(tmp_path), "evaluate", "--approve-sandbox", "--resume-evaluation", str(destination)]) == 0
+
+    assert len(run_calls) == 3 * len(SCENARIOS[:-1])
+    with (
+        patch.dict(os.environ, {**environment, "OPENAI_BASE_URL": "https://other.example/v1"}, clear=False),
+        patch("invaris.cli.load_dotenv"), patch.object(cli, "DockerFixture", FakeFixture),
+        patch("invaris.tracing.configure_tracing"), patch("invaris.tracing.flush_tracing"),
+        patch("invaris.tracing.shutdown_tracing"),
+    ):
+        assert cli.main(["--root", str(tmp_path), "evaluate", "--approve-sandbox", "--resume-evaluation", str(destination)]) == 2
 
 
 def test_resume_rejects_tampered_rows_before_reuse(tmp_path):
