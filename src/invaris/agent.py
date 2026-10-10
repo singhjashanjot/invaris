@@ -74,6 +74,8 @@ class Agent:
         self._base_duration = accumulated_duration
         self._persist(started)
         for step in range(step_offset + 1, self.contract.budgets.max_steps + 1):
+            if self.version == AgentVersion.V2 and self.controller.infeasibility_gate(receipts):
+                return self._result(ResultStatus.BLOCKED, "independent policy evidence shows infeasibility", step - 1, receipts, usage, started, claimed_status, model_claim, accumulated_duration)
             if self._elapsed(started, accumulated_duration) >= self.contract.budgets.max_duration_seconds:
                 return self._result(ResultStatus.UNVERIFIED, "duration budget exhausted", step - 1, receipts, usage, started, claimed_status, model_claim, accumulated_duration)
             try:
@@ -158,6 +160,9 @@ class Agent:
                 if raised and self._is_mutating(call.name):
                     pending_after = [call.model_dump()]
                 self._sync_runtime(messages, receipts, usage, errors, calls, step, accumulated_duration, pending_after or None, started)
+                if self.version == AgentVersion.V2 and self.controller.infeasibility_gate(receipts):
+                    self._sync_runtime(messages, receipts, usage, errors, calls, step, accumulated_duration, None, started)
+                    return self._result(ResultStatus.BLOCKED, "independent policy evidence shows infeasibility", step, receipts, usage, started, claimed_status, model_claim, accumulated_duration)
                 if raised and self._is_mutating(call.name):
                     return self._result(ResultStatus.UNVERIFIED, "mutation outcome is uncertain; review fixture before resuming", step, receipts, usage, started, claimed_status, model_claim, accumulated_duration)
                 if errors > self.contract.budgets.max_errors:

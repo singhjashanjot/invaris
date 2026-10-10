@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from invaris.agent import Agent, DeterministicOfflineModel
@@ -147,12 +149,49 @@ def test_formatted_blocked_status_still_requires_infeasibility_receipt():
     ])
     result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
     assert result.status == ResultStatus.BLOCKED
-    assert result.claimed_status == ResultStatus.BLOCKED
+    assert result.claimed_status is None
 
     model = DeterministicOfflineModel([{"tool_calls": [], "content": content, "usage": {}}])
     result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
     assert result.status == ResultStatus.UNVERIFIED
     assert result.claimed_status == ResultStatus.BLOCKED
+
+
+@pytest.mark.parametrize("content", ["Inspection summary: the client requirements conflict.", "VERIFIED: the migration is complete."])
+def test_v2_policy_evidence_stops_before_later_model_status(content):
+    model = DeterministicOfflineModel([
+        {"tool_calls": [{"id": "cap", "name": "inspect_capabilities", "arguments": {}}], "content": "", "usage": {}},
+        {"tool_calls": [], "content": content, "usage": {}},
+    ])
+    result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
+    assert result.status == ResultStatus.BLOCKED
+    assert result.model_claim is None
+    assert next(model._replies)["content"] == content
+    assert result.reason == "independent policy evidence shows infeasibility"
+
+
+def test_v2_infeasibility_cancels_remaining_tools_in_the_same_turn(tmp_path):
+    executor = Executor()
+    model = DeterministicOfflineModel([
+        {"tool_calls": [
+            {"id": "cap", "name": "inspect_capabilities", "arguments": {}},
+            {"id": "stage", "name": "stage_config_change", "arguments": {"path": "config.json"}},
+        ], "content": "", "usage": {}},
+    ])
+    checkpoint = tmp_path / "checkpoint.json"
+    result = Agent(make_contract(), executor, model, AgentVersion.V2, checkpoint_path=checkpoint).run()
+    assert result.status == ResultStatus.BLOCKED
+    assert executor.calls == [("inspect_capabilities", {})]
+    assert len(result.receipts) == 1
+    assert json.loads(checkpoint.read_text())["pending_calls"] is None
+
+
+def test_v2_does_not_infer_blocked_status_from_unstructured_prose_without_evidence():
+    model = DeterministicOfflineModel([
+        {"tool_calls": [], "content": "Inspection summary: migration appears infeasible.", "usage": {}}
+    ])
+    result = Agent(make_contract(), Executor(), model, AgentVersion.V2).run()
+    assert result.status == ResultStatus.UNVERIFIED
 
 
 def test_formatted_verified_status_without_probes_remains_unverified():
