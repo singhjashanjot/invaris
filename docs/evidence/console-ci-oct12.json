@@ -1,0 +1,29 @@
+{
+  "schema": "invaris.console-ci/v1",
+  "run_id": 38171504827,
+  "source_commit": "29f7b9de5ce5b9b964ce74569b8110ad26633f38",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-11T20:16:26Z",
+  "completed_at": "2026-10-11T20:19:00Z",
+  "linux_unit_tests": 233,
+  "real_docker_tests": 8,
+  "windows_local_unit_tests": 232,
+  "windows_symlink_test_skipped": 1,
+  "jobs": [
+    {
+      "name": "integration",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "checks",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "limitations": [
+    "CI validates the named source commit, not cryptographic certification or live gateway/dashboard account availability.",
+    "One additional Linux test passes because symlink creation is available; it is skipped locally on Windows."
+  ]
+}
