@@ -223,6 +223,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project", default="invaris-local", help="Owned invaris-* Compose project")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("setup", help="Build and start the pinned TLS fixture")
+    console = commands.add_parser("serve", help="Open the loopback-only operator frontend")
+    console.add_argument("--port", type=int, default=8766)
     doctor = commands.add_parser("doctor", help="Check integrations without printing credentials")
     doctor.add_argument("--probe-neatlogs", action="store_true")
     for name in ("run", "evaluate"):
@@ -256,6 +258,10 @@ def main(argv: list[str] | None = None) -> int:
         arguments.artifacts = os.getenv("INVARIS_ARTIFACTS", "artifacts")
     tracing_started = False
     try:
+        if arguments.command == "serve":
+            from .console import serve_console
+            serve_console(root, arguments.port)
+            return 0
         if arguments.command == "trace-audit":
             from .trace_audit import audit_trace_readback
             expected = json.loads(arguments.expected.read_text(encoding="utf-8"))

@@ -1,0 +1,148 @@
+{
+  "schema": "invaris.hackathon-proof-index/v1",
+  "snapshot_date": "2026-10-12",
+  "criteria_source": {
+    "status": "official_neatlogs_challenge_and_submission_faq_dom_verified",
+    "official_rules_currently_verified": true,
+    "checked_date": "2026-10-12",
+    "verification_method": "T3 collaborative browser main requirements and submission FAQ DOM",
+    "verified_requirements": {
+      "integrations_and_business_plan": "Use Neatlogs and Entire to build or improve an agent and provide a CFO business plan.",
+      "neatlogs_telemetry": [
+        "model and tool inputs",
+        "responses",
+        "state",
+        "retries",
+        "errors",
+        "latency",
+        "tokens",
+        "cost"
+      ],
+      "submission": {
+        "demo_video_max_minutes": 3,
+        "public_repository": true,
+        "video_must_cover_for_each": [
+          "Neatlogs",
+          "Entire",
+          "CFO"
+        ],
+        "required_video_headings": [
+          "architecture",
+          "implementation",
+          "runtime",
+          "reasoning",
+          "result"
+        ],
+        "commits_verify_made_event_window": true,
+        "supporting_evidence_in_repository": true
+      },
+      "evidence_accordion": {
+        "improved_before_after_run_with_two_traces_and_compared_numbers": true,
+        "neatlogs_project_trace_links_or_screenshots": true,
+        "entire_checkpoints_or_graph_output": true,
+        "cfo_pricing_costs_revenue_runway_plan": true,
+        "failed_action_with_next_step": true,
+        "public_posts_hashtag": "#neatHack",
+        "public_repository_event_dated_commits": true
+      },
+      "judging_weights_percent": {
+        "agent": 30,
+        "partner_integrations": 25,
+        "demo": 20,
+        "building_in_public": 15,
+        "usefulness_and_originality": 10
+      }
+    },
+    "note": "The Neatlogs challenge main section and submission FAQ answer were read from current DOM on the checked date. This does not guarantee eligibility or judge acceptance."
+  },
+  "integrations": [
+    {
+      "id": "neatlogs",
+      "name": "Neatlogs",
+      "role": "Agent runtime observability and application trace evidence",
+      "status": "sdk_trace_verification_complete_scoped_dashboard_link_or_screenshot_pending",
+      "headline": "SDK verification is complete for seven original V1 and five original V2 cloud traces; two original V2 traces remain partial, two separate fresh V2 traces are complete, and the required dashboard link or screenshot is pending.",
+      "detail": "OpenAI-client calls from the Python run/evaluate CLI are instrumented with Neatlogs SDK 1.4.26. Workflow, model, tool, error, and trace identity evidence is saved. The infeasible-policy comparison shows V1 VERIFIED versus evaluator BLOCKED (17 spans, 7 model, 8 tool) and V2 BLOCKED versus evaluator BLOCKED (5 spans, 1 model, 2 tool). A V2 recovery trace contains a restart_service ERROR followed by successful restart and rollback/reverify (20 spans, 8 model, 10 tool). This satisfies scoped SDK trace verification only; local JSON and trace IDs do not fulfill the official project-trace link/screenshot format. T3's app.neatlogs.com destination redirected to sign-in; no authenticated dashboard is available. A human with dashboard access must supply the permalink, screenshot, or official share link. Public CLI OAuth is unverified.",
+      "evidence_paths": [
+        "docs/neatlogs-tracing.md",
+        "docs/trace-audit.md",
+        "docs/evidence/neatlogs-oct12-coverage.json",
+        "docs/evidence/neatlogs-oct12-v1-impossible_client_requirement.json",
+        "docs/evidence/neatlogs-oct12-v2-impossible_client_requirement.json",
+        "docs/evidence/neatlogs-oct12-v2-one_shot_action_failure.json",
+        "docs/evidence/fresh-application-runs-oct12.json",
+        "docs/evidence/console-validation-oct12.json",
+        "docs/evidence/final-study-summary.json"
+      ]
+    },
+    {
+      "id": "entire",
+      "name": "Entire",
+      "role": "Local coding-agent checkpoints and source graph retrieval",
+      "status": "verified_local_hosted_unverified",
+      "headline": "A genuine local checkpoint maps an isolated audit-development session to commit 429769a; local Graph output retrieves final-source infeasibility logic.",
+      "detail": "Checkpoint 01M4P5F42NEWP4TDWNFHWZVR2R is locally verified, with explicit limits: it covers one isolated worker, not the main session or all refinements. Final-source Graph evidence is associated with migration source aa5777b. No hosted GitHub App authentication, hosted checkpoint link, automatic hook capture, raw transcript upload, token-savings measurement, or performance improvement is claimed.",
+      "checkpoint_ids": [
+        "01M4P5F42NEWP4TDWNFHWZVR2R"
+      ],
+      "evidence_paths": [
+        "docs/entire-evidence.md",
+        "docs/evidence/entire-oct12-checkpoint.json",
+        "docs/evidence/entire-final-graph.json"
+      ]
+    },
+    {
+      "id": "cfo",
+      "name": "cfo.ai",
+      "role": "Business-plan review and measured inference-cost reconciliation",
+      "status": "shared_plan_reviewed_local_reconciliation",
+      "headline": "Reviewed six visible model pages and 39 Main Scenario months; reconciled final-study V2 inference at $0.3992516 across seven attempts, without editing or exporting the shared plan.",
+      "detail": "The user-shared plan assumes enterprise and midmarket three-month pilots of $60,000 and $25,000, ACVs of $240,000 and $90,000, and a hypothetical $1.5 million opening cash balance. It shows a $96,355 September 2028 minimum and 31.7 months starting runway. Final-study estimated inference is $0.05703594 per attempt and $0.0998129 per verified non-no-op migration across four migrations; these are estimates, not invoices or full delivery COGS. Revenue, customers, conversions, costs, and financing remain planning assumptions. The shared model still contains a $6 inference placeholder and a PENDING measured field. Browser review, not API/export or formula audit.",
+      "share_url": "https://cfo.ai/s/aMAZiEnSXtphYplP",
+      "evidence_paths": [
+        "business/cfo-review.md",
+        "business/final-measured-assumptions.json",
+        "business/measured-assumptions.json",
+        "docs/evidence/final-study-summary.json"
+      ]
+    }
+  ],
+  "study_result": {
+    "study_id": "ebeea671-7e12-4493-9531-04456a74efeb",
+    "source_commit": "aa5777b1647bdc712fc7a444e17a3679adb3021d",
+    "repetitions_per_scenario_per_arm": 1,
+    "scenarios": 7,
+    "matched_pairs": 7,
+    "outcomes_correct": {
+      "V1": "6/7",
+      "V2": "7/7",
+      "fixed_script": "7/7"
+    },
+    "recovery": "V1 and V2 each recovered in 2/2 seeded recovery cases.",
+    "limitations": [
+      "One repetition is not statistical evidence of superiority or production accuracy.",
+      "The fixed script is fixture-specific, matches V2 on these cases, and costs no inference.",
+      "Two historical V2 cloud traces remain partial; separate fresh V2 traces are not substituted into the matched study."
+    ]
+  },
+  "publication": {
+    "neatlogs_dashboard_permalink_or_official_share_link": "pending_human_dashboard_access_required",
+    "neatlogs_screenshot": "pending_human_dashboard_access_required",
+    "building_in_public_posts": "deferred_by_user",
+    "demo_recording": "deferred_by_user",
+    "demo_video_max_minutes": 3,
+    "demo_required_headings_per_integration": [
+      "architecture",
+      "implementation",
+      "runtime",
+      "reasoning",
+      "result"
+    ],
+    "public_submission": "deferred_by_user",
+    "eligibility_and_judge_acceptance": "not_guaranteed"
+  },
+  "source_urls_for_organizer_confirmation": [
+    "https://neatlogs.com/hackathon#challenge",
+    "https://hack.entire.io/neathacks-2026"
+  ]
+}

@@ -1,4 +1,16 @@
-# Release validation — October 11, 2026
+# Release validation
+
+## October 12 operator frontend validation
+
+The implemented release now includes a loopback-only landing page and interactive operator console, in addition to the CLI and owned TLS fixture. Workflow approvals, scenario selection, run receipts, independent verdicts, saved SDK trace trees, integration evidence, the matched-study comparison, and the business-plan link are connected to real local artifacts and bounded CLI jobs. No action runs automatically on page load. This is not a remotely hosted or multiuser production service.
+
+Fresh local validation passes 232 unit tests and 11 subtests, with one Windows symlink test skipped, plus all eight real Docker/TLS integration tests. Ruff, dependency consistency, JavaScript syntax, wheel creation, and inclusion of all three frontend assets pass. Browser checks cover desktop and narrow mobile layouts, evidence-file retrieval, separate setup/run consent, paid consent, and actual workflow execution.
+
+A fresh `pip-audit` lookup across the locked Python requirements reports no known vulnerabilities. The lock is pinned rather than fully hashed; this does not cover native image dependencies or establish security certification.
+
+Three separate console runs verify a scripted no-op, scripted recovery, and a live Claude Haiku recovery. The live run `960415d5-92fd-4e64-90e9-7840d91d86fd` independently verifies the hybrid connection and rollback; its cloud trace `4b0e7a97d43c5bc477f1d55d6b389589` passes structural audit with 20 spans: eight LLM, nine agent tools, one rollback tool, and two workflows. The failed restart is an actual ERROR span followed by successful recovery. Duration is 52.781 seconds and estimated inference is $0.0726209. These runs do not replace the original matched study or imply general reliability. The unchanged project ledger now records $5.7884838 against the $10 authorization; estimates are not invoices. See `evidence/console-validation-oct12.json`.
+
+The partner roles and judge-facing proof checklist are consolidated in `hackathon-integration-proof.md`. Neatlogs SDK application verification, Entire local checkpoint/Graph evidence, and the reviewed cfo.ai business artifact are available. The official Neatlogs dashboard permalink or screenshot still requires human dashboard sign-in. Optional hosted authentication, public posts, recording, and submission are not claimed complete.
 
 ## October 12 follow-up
 
@@ -8,7 +20,7 @@ Latest tooling source is `429769a`; migration semantics remain the evaluated `aa
 
 This closes current reproducible sandbox tracing evidence, not every historical trace or an enterprise deployment assessment. The October 11 sections below are retained as dated evidence; their initial pending/failure observations are superseded by this follow-up where explicitly stated. Hosted optional authentication remains unverified. Submission/publication is still deferred.
 
-## Release decision
+## Historical release decision — October 11
 
 Invaris 0.1.0 is a validated, authorized TLS migration sandbox, not a production deployment platform. The agent, controller, independent verification, recovery, rollback, reports, budget ledger, and regression checks work in the owned fixture. Complete cloud tracing remains an open release gate. Do not represent every external integration as complete or deploy this agent to customer infrastructure.
 

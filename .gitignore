@@ -8,9 +8,12 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
+build/
+dist/
 artifacts/runs/
 artifacts/evaluations/
 artifacts/private/
+artifacts/console/
 *.key
 *.pem
 .entire/tmp/

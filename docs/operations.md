@@ -4,7 +4,7 @@
 
 This is a sandbox release for the owned disposable TLS fixture. It does not migrate arbitrary production services, change certificate authentication to post-quantum signatures, or establish whole-system quantum safety. Fresh authenticated TLS 1.3 key exchange and the supported application response are checked against the fixture contract.
 
-Migration semantics remain evaluated commit `aa5777b1647bdc712fc7a444e17a3679adb3021d`; latest trace-audit tooling is `429769a`. Validation passes 207 unit tests plus 11 subtests, Ruff, and `pip check`. Full fresh CI `38166297502` passed all 207 unit tests and all 8 real Docker/TLS integration tests on the October 12 audit source; push checks `38166296714` also pass. A prior locked-dependency audit found no known advisories; none of these checks certifies native or whole-system security. The current image confirms OpenSSL 3.5.9.
+Migration semantics remain evaluated commit `aa5777b1647bdc712fc7a444e17a3679adb3021d`; latest trace-audit tooling is `429769a`. Current test status is 227 unit tests plus 11 subtests, with one Windows symlink test skipped; eight Docker integration tests are pending a fresh run. A prior locked-dependency audit found no known advisories; none of these checks certifies native or whole-system security. The current image confirms OpenSSL 3.5.9.
 
 The final-source study `ebeea671-7e12-4493-9531-04456a74efeb` is complete: 21 attempts, 7 matched V1/V2 pairs, no control mismatches or unmatched attempts. Correct classifications: V1 6/7, V2 7/7, fixed script 7/7. V1 has one false-readiness claim; V2 and the script have zero. Each arm recovers in 2/2 seeded recovery cases. Estimated model costs are $0.3968316 (V1), $0.3992516 (V2), and $0 (script). One repetition cannot establish statistical superiority; the deterministic script knows this small fixture and is cheaper and faster.
 
@@ -35,7 +35,12 @@ On Linux use `python3.12` and `.venv/bin/python`. The lock has no wheel hashes a
 .venv\Scripts\python.exe -m invaris run --offline --approve-sandbox --scenario wrong_active_group
 .venv\Scripts\python.exe -m invaris evaluate --offline --approve-sandbox --include-held-out
 .venv\Scripts\python.exe -m invaris verify-bundle --directory artifacts/evaluations/ebeea671-7e12-4493-9531-04456a74efeb
+.venv\Scripts\python.exe -m invaris serve --port 8766
 ```
+
+The frontend binds to loopback at `http://127.0.0.1:8766/`. The landing page links to `/app`, the local operator console. Its sections cover workflows, runs, traces, integrations, evidence, and business information. The console owns the Invaris Docker Compose project and exposes only its scoped operations; this frontend is not a remote production service and has no multiuser authentication.
+
+Setup and run are separate actions, each requiring its own explicit approval in the console. Merely loading or navigating the page does not start either action. Offline mode executes the real scripted TLS workflow without an LLM; it is a smoke path, not live-agent evidence. Live paid runs require the explicit paid-run acknowledgement and are bounded by the existing $10 local estimate authorization and spend ledger described below. Do not cancel an active setup or run process: rollback may still be in progress.
 
 Offline mode is a scripted smoke model, not evidence of live agent improvement. The evaluation has V1, V2, and a deterministic fixed-script arm; the latter invokes no model. All recorded studies are complete. Use `--resume-evaluation <directory>` only for a genuinely interrupted study with unchanged controls and source; never portray a new run as a continuation of changed-source evidence. Resume requires the integrity manifest and binds semantic source hashes, effective model, rates, budget, and scenarios. It does not reset project spend. The total configured limits for both versions are 64k tokens, 16 steps, 24 tool calls, and 600 seconds.
 
@@ -61,9 +66,9 @@ To verify a run bundle:
 
 ## Partner evidence and business model
 
-- October 12 SDK readback structurally verifies all seven original V1 traces and five original V2 traces. Two historical V2 records remain partial, but separate fresh V2 migration/no-op runs now pass, giving actual cloud evidence for every scenario. The `trace-audit` gate rejects partial counts and broken topology. See `docs/trace-audit.md` and `docs/evidence/neatlogs-oct12-coverage.json`; fresh traces are not substituted into the original matched study. Public CLI OAuth remains optional and unverified.
+- October 12 SDK readback structurally verifies all seven original V1 traces and five original V2 traces. Two historical V2 records remain partial, but separate fresh V2 migration/no-op runs now pass, giving actual cloud evidence for every scenario. The `trace-audit` gate rejects partial counts and broken topology. See `docs/trace-audit.md` and `docs/evidence/neatlogs-oct12-coverage.json`; fresh traces are not substituted into the original matched study. Dashboard login is still needed to obtain the official permalink and screenshot; public CLI OAuth remains optional and unverified.
 - Entire's seven Codex hooks await approval. Multiple genuine isolated-session checkpoints and final-source Graph retrieval are verified locally; see `docs/entire-evidence.md`. Hosted GitHub App/checkpoint links and automatic capture remain unverified.
-- The shared cfo.ai artifact was reviewed across all six pages and 39 Main Scenario months. The actual shared artifact is the source; no official export was needed. Measured inference reconciliation is recorded in `business/measured-assumptions.json`: the 21-attempt V2 live arm cost $1.2196459 estimated, or $0.1108769 per 11 verified migrations. Costs retain all attempts. The shared artifact's $6 inference placeholder remains unchanged; it is local planning content, not a cfo.ai export or a measured cost.
+- The shared cfo.ai artifact was reviewed across all six pages and 39 Main Scenario months. This is a reviewed artifact, not an API integration or official export. Final matched-study V2 estimated inference is $0.3992516 across seven attempts: $0.05703594 per attempt and $0.0998129 per verified non-no-op migration across four migrations, as recorded in `business/final-measured-assumptions.json`. The older `business/measured-assumptions.json` retains a separate historical study and must not be pooled with the final study. The shared model still has a $6 placeholder and PENDING measured field; the local reconciliation does not update its formulas.
 
 The project directory itself should provide the current business command usage and evaluation inputs:
 

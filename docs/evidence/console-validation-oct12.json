@@ -1,0 +1,93 @@
+{
+  "schema": "invaris.console-validation/v1",
+  "recorded_at": "2026-10-11T20:06:40.401Z",
+  "scope": "Loopback operator frontend, owned invaris-console Docker fixture",
+  "unit_tests": 232,
+  "unit_subtests": 11,
+  "windows_symlink_skips": 1,
+  "real_docker_tests": 8,
+  "ruff": "passed",
+  "pip_check": "passed",
+  "locked_python_dependency_audit": "No known vulnerabilities found; not a native image audit or security certification",
+  "javascript_syntax": "passed",
+  "wheel_assets": "index.html, app.js, styles.css included",
+  "budget_committed_estimate_usd": "5.7884838",
+  "authorized_budget_usd": "10.0",
+  "records": [
+    {
+      "run_id": "14f4ea2b-00cd-4fdc-ad50-b84209c6af28",
+      "scenario": "already_compliant",
+      "mode": "offline-smoke-not-LLM",
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "verified": true,
+      "recovery_succeeded": false,
+      "rollback_verified": true,
+      "model_calls": 0,
+      "tool_calls": 4,
+      "estimated_cost": 0,
+      "duration_seconds": 25.54700000002049,
+      "trace_id": "53cac8d7bd42ca4d17bd44205afd792d"
+    },
+    {
+      "run_id": "33b88828-0f1d-4844-aed7-0d504c2275a8",
+      "scenario": "one_shot_action_failure",
+      "mode": "offline-smoke-not-LLM",
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "verified": true,
+      "recovery_succeeded": true,
+      "rollback_verified": true,
+      "model_calls": 0,
+      "tool_calls": 8,
+      "estimated_cost": 0,
+      "duration_seconds": 38.09400000004098,
+      "trace_id": "7360431c37e8c2ed6133effbc60a82b2"
+    },
+    {
+      "run_id": "960415d5-92fd-4e64-90e9-7840d91d86fd",
+      "scenario": "one_shot_action_failure",
+      "mode": "live-model",
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "verified": true,
+      "recovery_succeeded": true,
+      "rollback_verified": true,
+      "model_calls": 8,
+      "tool_calls": 9,
+      "estimated_cost": 0.07262089999999999,
+      "duration_seconds": 52.78100000001723,
+      "trace_id": "4b0e7a97d43c5bc477f1d55d6b389589",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 20,
+          "model_calls": 8,
+          "tool_calls": 10,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 8,
+          "reported_tool_calls": 10
+        },
+        "expected_counts": {
+          "model_calls": 8,
+          "tool_calls": 10
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Separate frontend verification runs, not substitutions into the matched V1/V2 study.",
+    "Offline runs exercise real TLS tools but are scripted and do not use an LLM.",
+    "Cloud trace completeness is structural saved readback, not cryptographic attestation or dashboard screenshot.",
+    "Loopback-only console; no remote deployment or multiuser authentication claim.",
+    "Neatlogs dashboard permalink/screenshot still requires human sign-in."
+  ]
+}
