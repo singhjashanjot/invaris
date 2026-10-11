@@ -1,0 +1,33 @@
+{
+  "schema": "invaris.cfo-browser-review/v1",
+  "review_status": "reviewed",
+  "source": "shared_browser",
+  "share_url": "https://cfo.ai/s/aMAZiEnSXtphYplP",
+  "reviewed_at": "2026-10-12T04:38:00+05:30",
+  "pages": [
+    "Costs & Unit Economics",
+    "Team & Payroll",
+    "P&L Burn Runway",
+    "Assumptions",
+    "Revenue & Customers",
+    "Invaris Plan Overview"
+  ],
+  "scenario": "Main Scenario",
+  "scenario_months": 39,
+  "latest_capture": "T3 browser capture of overview economics and runway",
+  "plan_assumptions": {
+    "enterprise_three_month_pilot_usd": 60000,
+    "midmarket_three_month_pilot_usd": 25000,
+    "enterprise_acv_usd": 240000,
+    "midmarket_acv_usd": 90000,
+    "opening_cash_usd": 1500000,
+    "starting_runway_months": 31.7
+  },
+  "shared_model_state": {
+    "inference_cost_placeholder_usd": 6,
+    "measured_field": "PENDING",
+    "local_measured_estimates_updated_shared_plan": false
+  },
+  "scope": "Visible browser review only; no API/export/formula audit or shared-model update.",
+  "record_scope": "The review was captured in a private browser recording. No public screenshot is available."
+}

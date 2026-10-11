@@ -1,0 +1,33 @@
+{
+  "schema": "invaris.neatlogs-authenticated-dashboard-evidence/v1",
+  "verified_at": "2026-10-12T04:37:00+05:30",
+  "verification_method": "Authenticated T3 browser DOM inspection",
+  "project_id": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+  "organization_id": "7534cadd-7e58-49bb-ac87-9dc260c3abaa",
+  "run_id": "960415d5-92fd-4e64-90e9-7840d91d86fd",
+  "trace_id": "4b0e7a97d43c5bc477f1d55d6b389589",
+  "authenticated_trace_url": "https://app.neatlogs.com/traces/4b0e7a97d43c5bc477f1d55d6b389589?orgId=7534cadd-7e58-49bb-ac87-9dc260c3abaa&projectId=2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+  "dashboard_observations": {
+    "dom_span_count": 20,
+    "duration_seconds": 55.0,
+    "migration_duration_seconds": 41.4,
+    "restart_service": [
+      "ERROR",
+      "success"
+    ],
+    "rollback_duration_seconds": 10.3,
+    "output_status": "VERIFIED"
+  },
+  "scope_notes": [
+    "Authenticated dashboard trace was verified in the named project and organization.",
+    "Dashboard duration of 55.0 seconds is distinct from the local run record duration of 52.781 seconds; these scopes are not reconciled as identical measurements.",
+    "The two historical partial V2 traces remain partial; this trace is separate evidence and does not change historical study coverage.",
+    "The authenticated permalink requires account access; no public share link is available or claimed."
+  ],
+  "private_capture": {
+    "recording": "public/neatlogs-raw.mp4",
+    "recording_note": "Captured privately; contains no login footage.",
+    "screenshot": "C:/Users/JASHAN/.t3/userdata/browser-artifacts/browser-screenshot-app-neatlogs-com-mv4fohxt-da46f881.png",
+    "availability": "Private browser artifacts; not included in the public repository."
+  }
+}

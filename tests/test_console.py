@@ -118,6 +118,60 @@ def test_integrations_without_markdown_have_no_dangling_evidence_or_review_claim
     assert "review record is absent" in cfo["headline"]
 
 
+def cfo_review_record():
+    return {
+        "schema": "invaris.cfo-browser-review/v1",
+        "review_status": "reviewed",
+        "source": "shared_browser",
+        "share_url": "https://cfo.ai/s/aMAZiEnSXtphYplP",
+        "reviewed_at": "2026-10-12T04:38:00+05:30",
+        "pages": ["Costs & Unit Economics", "Team & Payroll", "P&L Burn Runway", "Assumptions",
+                  "Revenue & Customers", "Invaris Plan Overview"],
+        "scenario": "Main Scenario",
+        "scenario_months": 39,
+        "scope": "Visible browser review only; no API/export/formula audit or shared-model update.",
+    }
+
+
+def test_browser_review_record_enables_cfo_status_without_markdown(state):
+    path = state.root / "business/cfo-browser-review-oct12.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(cfo_review_record()), encoding="utf-8")
+    state.evidence_paths = state._evidence_allowlist()
+
+    cfo = next(item for item in state.integrations() if item["id"] == "cfo")
+    assert state._cfo_review_available() is True
+    assert cfo["status"] == "shared_plan_reviewed_local_reconciliation"
+    assert "business/cfo-browser-review-oct12.json" in cfo["evidence_paths"]
+    assert "business/cfo-review.md" not in cfo["evidence_paths"]
+
+
+@pytest.mark.parametrize("change", [
+    {"schema": "unrecognized/v9"}, {"share_url": "https://cfo.ai/s/other"},
+    {"review_status": "pending"}, {"pages": ["Costs & Unit Economics"]},
+    {"scenario_months": 0}, {"scenario_months": True}, {"scope": "API audit and model update"},
+    {"reviewed_at": "not-a-date"}, {"reviewed_at": "2026-10-12T04:38:00"},
+])
+def test_invalid_browser_review_record_downgrades_cfo(state, change):
+    path = state.root / "business/cfo-browser-review-oct12.json"
+    path.parent.mkdir(parents=True)
+    record = cfo_review_record()
+    record.update(change)
+    path.write_text(json.dumps(record), encoding="utf-8")
+
+    cfo = next(item for item in state.integrations() if item["id"] == "cfo")
+    assert state._cfo_review_available() is False
+    assert cfo["status"] == "local_reconciliation_only"
+    assert "business/cfo-browser-review-oct12.json" not in cfo["evidence_paths"]
+
+
+def test_bootstrap_reports_browser_review_without_markdown(state):
+    path = state.root / "business/cfo-browser-review-oct12.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(cfo_review_record()), encoding="utf-8")
+    assert state.bootstrap()["business"]["review_available"] is True
+
+
 def test_local_markdown_evidence_remains_available(state):
     review = state.root / "business/cfo-review.md"
     review.parent.mkdir(parents=True)

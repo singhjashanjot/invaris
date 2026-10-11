@@ -31,6 +31,13 @@ SCENARIO_DETAILS = {
     "missing_probe_evidence": ("Missing evidence", "Withhold readiness when a fresh connection cannot be independently verified."),
     "held_out_config": ("Held-out configuration", "Investigate a configuration variant outside the basic seeded setup."),
 }
+CFO_SHARE_URL = "https://cfo.ai/s/aMAZiEnSXtphYplP"
+CFO_REVIEW_PATH = "business/cfo-browser-review-oct12.json"
+CFO_REVIEW_SCHEMA = "invaris.cfo-browser-review/v1"
+CFO_REVIEW_PAGES = (
+    "Costs & Unit Economics", "Team & Payroll", "P&L Burn Runway", "Assumptions",
+    "Revenue & Customers", "Invaris Plan Overview",
+)
 
 
 def _now() -> str:
@@ -188,15 +195,51 @@ class ConsoleState:
             {"id": "entire", "name": "Entire", "status": "verified-local", "headline": "Genuine checkpoints and Graph retrieval", "detail": "Local development context is captured and linked to source history. Hosted authentication and automatic hooks are not claimed.", "evidence_paths": ["docs/evidence/entire-oct12-checkpoint.json", "docs/evidence/entire-final-graph.json"]},
             {"id": "cfo", "name": "cfo.ai", "status": "local_reconciliation_only", "headline": "Local inference-cost reconciliation is available; shared business-plan review record is absent.", "detail": "Local inference reconciliation is not an API integration or update to the shared plan.", "evidence_paths": ["business/final-measured-assumptions.json"]},
             ]
+        review_available = self._cfo_review_available()
         for entry in entries:
             if not isinstance(entry, dict):
                 continue
             evidence = entry.get("evidence_paths", [])
             entry["evidence_paths"] = [path for path in evidence if path in self.evidence_paths] if isinstance(evidence, list) else []
-            if entry.get("id") == "cfo" and not (self.root / "business/cfo-review.md").is_file():
+            if entry.get("id") == "cfo" and not review_available:
                 entry["status"] = "local_reconciliation_only"
                 entry["headline"] = "Local inference-cost reconciliation is available; the shared business-plan review record is absent."
+            elif entry.get("id") == "cfo" and self._cfo_browser_review() is not None:
+                entry["status"] = "shared_plan_reviewed_local_reconciliation"
+                if "absent" in entry.get("headline", ""):
+                    entry["headline"] = "Shared plan reviewed in the browser; local inference-cost reconciliation remains separate."
+                if CFO_REVIEW_PATH in self.evidence_paths:
+                    entry["evidence_paths"] = list(dict.fromkeys(entry["evidence_paths"] + [CFO_REVIEW_PATH]))
         return self.sanitize(entries)
+
+    def _cfo_browser_review(self) -> dict | None:
+        path = self.root / CFO_REVIEW_PATH
+        if path.is_symlink() or not path.resolve().is_relative_to(self.root.resolve()):
+            return None
+        review = _read_json(path)
+        if not isinstance(review, dict):
+            return None
+        if (review.get("schema") != CFO_REVIEW_SCHEMA
+                or review.get("share_url") != CFO_SHARE_URL
+                or review.get("review_status") != "reviewed"
+                or review.get("source") != "shared_browser"
+                or not isinstance(review.get("reviewed_at"), str)
+                or review.get("pages") != list(CFO_REVIEW_PAGES)
+                or review.get("scenario") != "Main Scenario"
+                or type(review.get("scenario_months")) is not int
+                or review.get("scenario_months", 0) <= 0
+                or review.get("scope") != "Visible browser review only; no API/export/formula audit or shared-model update."):
+            return None
+        try:
+            observed_at = datetime.fromisoformat(review["reviewed_at"])
+        except ValueError:
+            return None
+        if observed_at.tzinfo is None:
+            return None
+        return review
+
+    def _cfo_review_available(self) -> bool:
+        return self._cfo_browser_review() is not None or (self.root / "business/cfo-review.md").is_file()
 
     def bootstrap(self) -> dict:
         summary = _read_json(self.root / "docs/evidence/final-study-summary.json")
@@ -211,8 +254,8 @@ class ConsoleState:
             "scenarios": [{"id": name, "name": SCENARIO_DETAILS[name][0], "description": SCENARIO_DETAILS[name][1]} for name in SCENARIOS],
             "summary": {"latest_study": {"id": summary.get("study_id"), "summaries": summary.get("summaries", {})}},
             "integrations": self.integrations(), "runs": self.runs(), "jobs": jobs,
-            "business": {"review_available": (self.root / "business/cfo-review.md").is_file(),
-                         "shared_plan_url": "https://cfo.ai/s/aMAZiEnSXtphYplP",
+            "business": {"review_available": self._cfo_review_available(),
+                         "shared_plan_url": CFO_SHARE_URL,
                          "estimated_inference_per_verified_migration": summary.get("summaries", {}).get("V2", {}).get("cost_per_verified_migration"),
                          "forecast_is_hypothesis": True},
             "budget": {key: ledger.get(key) for key in ("authorized_total_usd", "committed_estimate_usd", "billing_guarantee")},
