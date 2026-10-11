@@ -1,0 +1,573 @@
+{
+  "schema": "invaris.application-cloud-coverage/v1",
+  "checked_at": "2026-10-11T19:02:41.066Z",
+  "latest_tooling_commit": "429769a206ce6b9618f1c1ea411aa3f2429be809",
+  "migration_semantic_source": "aa5777b1647bdc712fc7a444e17a3679adb3021d",
+  "original_final_study_id": "ebeea671-7e12-4493-9531-04456a74efeb",
+  "original_v1_complete_traces": 7,
+  "original_v2_complete_traces": 5,
+  "original_v2_partial_traces": 2,
+  "separate_fresh_v2_traces": 2,
+  "fresh_runs_not_substituted_into_matched_study": true,
+  "all_seven_scenarios_have_a_complete_v2_application_trace": true,
+  "records": [
+    {
+      "run_id": "fc61d744-eb06-4268-95dc-93a1fee422c5",
+      "scenario": "wrong_active_group",
+      "trace_id": "d73b80006033daa1ab29c4e0b4ae44aa",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": false,
+        "issues": [
+          "migration_workflow_missing",
+          "model_calls_underreported",
+          "tool_calls_underreported"
+        ],
+        "observed_counts": {
+          "spans": 9,
+          "model_calls": 3,
+          "tool_calls": 5,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 3,
+          "reported_tool_calls": 5
+        },
+        "expected_counts": {
+          "model_calls": 7,
+          "tool_calls": 9
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "8d8800b2b71a554cb006b9da0e917585bdd7bc27a5cb3eb7ac05c9df65fe07f6"
+    },
+    {
+      "run_id": "420c8721-5939-4a4f-a2a0-01ccd5643c07",
+      "scenario": "disk_runtime_mismatch",
+      "trace_id": "66bae7123afc5da9c4adcb5da676fa16",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 14,
+          "model_calls": 5,
+          "tool_calls": 7,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 5,
+          "reported_tool_calls": 7
+        },
+        "expected_counts": {
+          "model_calls": 5,
+          "tool_calls": 7
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "b0f45220385fb7641827c403647280ac0656abc97b9ed6d34e5170e1c2f63904"
+    },
+    {
+      "run_id": "d3dc3d68-3c27-49d6-9ec8-8e48626b59ae",
+      "scenario": "one_shot_action_failure",
+      "trace_id": "6bd6c2c7541df830c3892f68c2bcaeac",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 20,
+          "model_calls": 8,
+          "tool_calls": 10,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 8,
+          "reported_tool_calls": 10
+        },
+        "expected_counts": {
+          "model_calls": 8,
+          "tool_calls": 10
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "06840c6acf1cb127d2447c4bb3209d7c654d7d80c02cd7b4ba0fddde9349dfc3"
+    },
+    {
+      "run_id": "176533b4-cbcf-4edb-b7b8-e34a8a4fb62f",
+      "scenario": "already_compliant",
+      "trace_id": "284ed0ef4c5ba70404c6ecabd607106f",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": false,
+        "issues": [
+          "migration_workflow_missing",
+          "model_calls_underreported",
+          "tool_calls_underreported"
+        ],
+        "observed_counts": {
+          "spans": 2,
+          "model_calls": 0,
+          "tool_calls": 1,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 0,
+          "reported_tool_calls": 1
+        },
+        "expected_counts": {
+          "model_calls": 4,
+          "tool_calls": 6
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "ea6fe82f85fd8ca8de15b9f74465658df7703ea47b3cf13b35771109d0a229e7"
+    },
+    {
+      "run_id": "4f4133fb-db1c-40d2-94d2-08d00869c640",
+      "scenario": "impossible_client_requirement",
+      "trace_id": "31553e79fb615562c0fd9b395d987730",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "BLOCKED",
+      "evaluator_status": "BLOCKED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 5,
+          "model_calls": 1,
+          "tool_calls": 2,
+          "rollback_and_reverify_tools": 0,
+          "reported_model_calls": 1,
+          "reported_tool_calls": 2
+        },
+        "expected_counts": {
+          "model_calls": 1,
+          "tool_calls": 2
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "9fac10fbdc72cdca4ca71eac1d789ba717dd623e7b54a2dc4b67d2866115f126"
+    },
+    {
+      "run_id": "0ee89d69-e2fa-4fd9-9bfb-9d0bfeef9573",
+      "scenario": "missing_probe_evidence",
+      "trace_id": "ac384d618e6210cad5904ac2ca8cdcad",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "UNVERIFIED",
+      "evaluator_status": "UNVERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 18,
+          "model_calls": 8,
+          "tool_calls": 8,
+          "rollback_and_reverify_tools": 0,
+          "reported_model_calls": 8,
+          "reported_tool_calls": 8
+        },
+        "expected_counts": {
+          "model_calls": 8,
+          "tool_calls": 8
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "b95a5f0eb5cfe1dae90bf4b131d4bc01e674d4d0e5649ec8a1d3c7ed5cf10c5e"
+    },
+    {
+      "run_id": "ef0dcc12-b19b-4ff7-800d-170382b6a9f5",
+      "scenario": "held_out_config",
+      "trace_id": "28555f53e6b8a39487e2980ad97e4f35",
+      "original_final_study": true,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 26,
+          "model_calls": 11,
+          "tool_calls": 13,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 11,
+          "reported_tool_calls": 13
+        },
+        "expected_counts": {
+          "model_calls": 11,
+          "tool_calls": 13
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "017463fa9d5ef589a5747f4443f09a1d1b5cdd5debaaf4a11d67ed27dfba4655"
+    },
+    {
+      "run_id": "071bce0a-6123-426d-a810-74549e5fbd26",
+      "scenario": "already_compliant",
+      "trace_id": "585ee05b625d98a59d519e6bc55b32fd",
+      "original_final_study": false,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 12,
+          "model_calls": 4,
+          "tool_calls": 6,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 4,
+          "reported_tool_calls": 6
+        },
+        "expected_counts": {
+          "model_calls": 4,
+          "tool_calls": 6
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "03519083a95aeb99457183174597e86522aec3b34af6661acd0a336f63252fbc"
+    },
+    {
+      "run_id": "7f94ea34-a622-4533-9a6c-6ac7f2ae135d",
+      "scenario": "wrong_active_group",
+      "trace_id": "d4738d67c23b46cde52ebbfe59713599",
+      "original_final_study": false,
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 19,
+          "model_calls": 8,
+          "tool_calls": 9,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 8,
+          "reported_tool_calls": 9
+        },
+        "expected_counts": {
+          "model_calls": 8,
+          "tool_calls": 9
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "agent_version": "V2",
+      "readback_sha256": "f8f9dcc2422009437ac844a7776e3d3950203bb69c6348c0ffb05327fe59a603"
+    },
+    {
+      "run_id": "45a6d1df-cdee-4659-a4fd-aa8769a510fc",
+      "scenario": "wrong_active_group",
+      "trace_id": "eeadff4c3ea970cddea98234c18d4b91",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 18,
+          "model_calls": 7,
+          "tool_calls": 9,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 7,
+          "reported_tool_calls": 9
+        },
+        "expected_counts": {
+          "model_calls": 7,
+          "tool_calls": 9
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "cc744b5ed3983b8f9203eb32e0f23d44cd9818c71e069675435491ab720f31f2"
+    },
+    {
+      "run_id": "c64e47dd-8faa-45ff-b29d-5ce1271576f7",
+      "scenario": "disk_runtime_mismatch",
+      "trace_id": "327ace14e342f7efcc1af744e3024065",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 14,
+          "model_calls": 5,
+          "tool_calls": 7,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 5,
+          "reported_tool_calls": 7
+        },
+        "expected_counts": {
+          "model_calls": 5,
+          "tool_calls": 7
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "fd917ecad1c835e277346eb31ca2c2fc7951ca8ffb92437b3ac494a212846685"
+    },
+    {
+      "run_id": "5902f294-dfda-4ccb-a035-fe4ed68a7482",
+      "scenario": "one_shot_action_failure",
+      "trace_id": "b281baaf528a1802f31f80a2fd069d14",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 20,
+          "model_calls": 8,
+          "tool_calls": 10,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 8,
+          "reported_tool_calls": 10
+        },
+        "expected_counts": {
+          "model_calls": 8,
+          "tool_calls": 10
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "996f1418c1cb533352bf8df6abffcd3f7471672d04dd712bff042ddcd6b74575"
+    },
+    {
+      "run_id": "72dc73d4-be1e-420a-835a-8f59f95c802e",
+      "scenario": "already_compliant",
+      "trace_id": "d12c1f6e50d1692fbc0ea9a6caa8126b",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 12,
+          "model_calls": 4,
+          "tool_calls": 6,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 4,
+          "reported_tool_calls": 6
+        },
+        "expected_counts": {
+          "model_calls": 4,
+          "tool_calls": 6
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "4666bf0d65e7e6204c7945e47d46dfc27b14b66ab525a378865729769494fde4"
+    },
+    {
+      "run_id": "d7af38a4-8412-4c56-9e1a-cb98df6efa61",
+      "scenario": "impossible_client_requirement",
+      "trace_id": "94e1e7ffddcdf48a4bfb1e9ed3b991de",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "BLOCKED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 17,
+          "model_calls": 7,
+          "tool_calls": 8,
+          "rollback_and_reverify_tools": 0,
+          "reported_model_calls": 7,
+          "reported_tool_calls": 8
+        },
+        "expected_counts": {
+          "model_calls": 7,
+          "tool_calls": 8
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "6cf7774787924c9d2f978b220167ec7c8ca45b8f57d47db56be51eda4bcee948"
+    },
+    {
+      "run_id": "fbe21a77-4828-400d-9b31-fe0019ac344b",
+      "scenario": "missing_probe_evidence",
+      "trace_id": "80eec59244aeca10869c73f6e69830bc",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "UNVERIFIED",
+      "evaluator_status": "UNVERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 17,
+          "model_calls": 7,
+          "tool_calls": 8,
+          "rollback_and_reverify_tools": 0,
+          "reported_model_calls": 7,
+          "reported_tool_calls": 8
+        },
+        "expected_counts": {
+          "model_calls": 7,
+          "tool_calls": 8
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "7a142dad7fd6a2bb122ad854e62d8465a66364039833e83ace1805ff1380019e"
+    },
+    {
+      "run_id": "2497d669-2f26-4a2d-a81c-04a080b7a547",
+      "scenario": "held_out_config",
+      "trace_id": "f114d55e726e0788a31333a8b0f7a3d9",
+      "original_final_study": true,
+      "agent_version": "V1",
+      "http_status": 200,
+      "agent_status": "VERIFIED",
+      "evaluator_status": "VERIFIED",
+      "audit": {
+        "schema": "invaris.trace_audit.v1",
+        "complete": true,
+        "issues": [],
+        "observed_counts": {
+          "spans": 18,
+          "model_calls": 7,
+          "tool_calls": 9,
+          "rollback_and_reverify_tools": 1,
+          "reported_model_calls": 7,
+          "reported_tool_calls": 9
+        },
+        "expected_counts": {
+          "model_calls": 7,
+          "tool_calls": 9
+        },
+        "limitations": [
+          "This offline audit can only assess the supplied readback and local expected row.",
+          "Complete means structural count coverage and does not prove cryptographic authenticity.",
+          "HTTP success and SDK counters alone do not prove that a trace is complete.",
+          "The audit does not inspect or return model inputs, outputs, or credentials."
+        ]
+      },
+      "readback_sha256": "9656600fe9aa4afdd7bed7904d8659d5f71b5ab464699d8544a25704e5467d54"
+    }
+  ],
+  "limits": [
+    "Structural span counts and topology, not authenticated attestations.",
+    "Original historical partial traces remain partial; fresh runs are separate receipts, not new matched-study repetitions.",
+    "Delayed finalization is observed, but the exact cause of historical missing spans is not established.",
+    "SDK key readback is separate from public CLI OAuth."
+  ]
+}

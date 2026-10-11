@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-11T19:05:11.964Z",
+  "synthetic_probe": true,
+  "application_trace_proof": false,
+  "result": {
+    "name": "neatlogs",
+    "state": "configured",
+    "reason": "Doctor probe passed.",
+    "details": {
+      "sdk_version": "1.4.26",
+      "schema_version": "2"
+    }
+  }
+}

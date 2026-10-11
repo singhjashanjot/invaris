@@ -1,0 +1,82 @@
+{
+  "schema": "invaris.fresh-application-proof/v1",
+  "recorded_at": "2026-10-11T19:05:11.937Z",
+  "runs": [
+    {
+      "run_id": "071bce0a-6123-426d-a810-74549e5fbd26",
+      "scenario_id": "already_compliant",
+      "version": "V2",
+      "status": "VERIFIED",
+      "claims_readiness": true,
+      "policy_id": "strict-hybrid-v1",
+      "model_id": "claude-haiku",
+      "budget_id": "16steps-24tools-64000tokens-600seconds",
+      "infrastructure_valid": true,
+      "verified": true,
+      "evaluator_status": "VERIFIED",
+      "policy_conflict_evidence": false,
+      "changed_files": 0,
+      "unnecessary_mutations": 0,
+      "recovery_attempted": false,
+      "recovery_succeeded": false,
+      "input_tokens": 13465,
+      "output_tokens": 714,
+      "cache_tokens": null,
+      "estimated_cost": 0.033549999999999996,
+      "billed_cost": null,
+      "duration_seconds": 39.90700000000652,
+      "model_calls": 4,
+      "tool_calls": 5,
+      "metadata": {
+        "mode": "live-model",
+        "agent_version": "V2",
+        "script_turns": null,
+        "trace_id": "585ee05b625d98a59d519e6bc55b32fd",
+        "trace_state": "configured",
+        "rollback_verified": true
+      }
+    },
+    {
+      "run_id": "7f94ea34-a622-4533-9a6c-6ac7f2ae135d",
+      "scenario_id": "wrong_active_group",
+      "version": "V2",
+      "status": "VERIFIED",
+      "claims_readiness": true,
+      "policy_id": "strict-hybrid-v1",
+      "model_id": "claude-haiku",
+      "budget_id": "16steps-24tools-64000tokens-600seconds",
+      "infrastructure_valid": true,
+      "verified": true,
+      "evaluator_status": "VERIFIED",
+      "policy_conflict_evidence": false,
+      "changed_files": 1,
+      "unnecessary_mutations": 0,
+      "recovery_attempted": false,
+      "recovery_succeeded": false,
+      "input_tokens": 29896,
+      "output_tokens": 936,
+      "cache_tokens": null,
+      "estimated_cost": 0.0709192,
+      "billed_cost": null,
+      "duration_seconds": 50.51600000000326,
+      "model_calls": 8,
+      "tool_calls": 8,
+      "metadata": {
+        "mode": "live-model",
+        "agent_version": "V2",
+        "script_turns": null,
+        "trace_id": "d4738d67c23b46cde52ebbfe59713599",
+        "trace_state": "configured",
+        "rollback_verified": true
+      }
+    }
+  ],
+  "integrity_verified": true,
+  "authenticity_verified": false,
+  "matched_study_member": false,
+  "notes": [
+    "Two separate V2 application reruns verify fresh cloud completeness; they do not replace historical matched attempts.",
+    "Both verified actual TLS/application outcomes and rollback.",
+    "Total authorized ledger was not reset."
+  ]
+}

@@ -17,6 +17,12 @@ The new matched-study readback in `docs/evidence/matched-study-trace-readback.js
 
 These readbacks establish persisted tracing only. The independent fixture verifier remains the source of TLS/application contract evidence. Trace volume is not a quality metric, and no token-saving or improvement claim is made from these traces.
 
+## October 12 application coverage verification
+
+Refreshed SDK readback now structurally verifies all seven original V1 traces and five original V2 traces, including actual failed-action recovery with the failed tool span present. Two historical V2 traces remain partial. Separate fresh V2 migration and no-op executions now have complete model/tool/workflow/rollback counts, so all seven scenarios have real verified V2 cloud application evidence. Fresh executions are not substituted into the original matched study.
+
+The pure offline `trace-audit` gate compares identities, graph structure, and actual span counts against local run receipts; HTTP 200 alone cannot pass it. See `docs/trace-audit.md` and `docs/evidence/neatlogs-oct12-coverage.json`. Earlier observations below remain dated historical evidence, not the current overall application coverage status. Exact historical missing-span cause is unresolved.
+
 ## Operator paths
 
 The final-source study `ebeea671-7e12-4493-9531-04456a74efeb` completed and gracefully shut down the SDK. All SDK queue-drop, export-failure, truncation, and overflow counters were zero. Readback after shutdown still reports two partial HTTP 200 traces, three HTTP 404 traces, and two HTTP 409 traces marked `dlq` across the seven V2 attempts. The successful synthetic Doctor probe is separate. See `docs/evidence/final-study-trace-readback.json` and `docs/evidence/neatlogs-doctor.json`; no full application coverage is claimed. The exact SDK/backend persistence or readback cause is unresolved, and this remains a release gate for complete partner evidence.

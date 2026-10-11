@@ -1,0 +1,86 @@
+{
+  "run_id": "4f4133fb-db1c-40d2-94d2-08d00869c640",
+  "scenario": "impossible_client_requirement",
+  "trace_id": "31553e79fb615562c0fd9b395d987730",
+  "original_final_study": true,
+  "http_status": 200,
+  "agent_status": "BLOCKED",
+  "evaluator_status": "BLOCKED",
+  "audit": {
+    "schema": "invaris.trace_audit.v1",
+    "complete": true,
+    "issues": [],
+    "observed_counts": {
+      "spans": 5,
+      "model_calls": 1,
+      "tool_calls": 2,
+      "rollback_and_reverify_tools": 0,
+      "reported_model_calls": 1,
+      "reported_tool_calls": 2
+    },
+    "expected_counts": {
+      "model_calls": 1,
+      "tool_calls": 2
+    },
+    "limitations": [
+      "This offline audit can only assess the supplied readback and local expected row.",
+      "Complete means structural count coverage and does not prove cryptographic authenticity.",
+      "HTTP success and SDK counters alone do not prove that a trace is complete.",
+      "The audit does not inspect or return model inputs, outputs, or credentials."
+    ]
+  },
+  "readback": {
+    "_id": "31553e79fb615562c0fd9b395d987730",
+    "projectId": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+    "spanCount": 5,
+    "llmCalls": 1,
+    "toolCalls": 2,
+    "spans": [
+      {
+        "span_id": "47a5d7dded7fba9e",
+        "parent_span_id": null,
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.run",
+          "node_type": "workflow"
+        }
+      },
+      {
+        "span_id": "6572c8d0e982b905",
+        "parent_span_id": "1387dc529d961b8c",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "1387dc529d961b8c",
+        "parent_span_id": "47a5d7dded7fba9e",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.migration.V2",
+          "node_type": "workflow"
+        }
+      },
+      {
+        "span_id": "ca7e2b188721d6cd",
+        "parent_span_id": "1387dc529d961b8c",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "inspect_service",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "63d691c3a8577e27",
+        "parent_span_id": "1387dc529d961b8c",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "inspect_capabilities",
+          "node_type": "tool_call"
+        }
+      }
+    ]
+  }
+}

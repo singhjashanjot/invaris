@@ -1,0 +1,212 @@
+{
+  "run_id": "7f94ea34-a622-4533-9a6c-6ac7f2ae135d",
+  "scenario": "wrong_active_group",
+  "trace_id": "d4738d67c23b46cde52ebbfe59713599",
+  "original_final_study": false,
+  "http_status": 200,
+  "agent_status": "VERIFIED",
+  "evaluator_status": "VERIFIED",
+  "audit": {
+    "schema": "invaris.trace_audit.v1",
+    "complete": true,
+    "issues": [],
+    "observed_counts": {
+      "spans": 19,
+      "model_calls": 8,
+      "tool_calls": 9,
+      "rollback_and_reverify_tools": 1,
+      "reported_model_calls": 8,
+      "reported_tool_calls": 9
+    },
+    "expected_counts": {
+      "model_calls": 8,
+      "tool_calls": 9
+    },
+    "limitations": [
+      "This offline audit can only assess the supplied readback and local expected row.",
+      "Complete means structural count coverage and does not prove cryptographic authenticity.",
+      "HTTP success and SDK counters alone do not prove that a trace is complete.",
+      "The audit does not inspect or return model inputs, outputs, or credentials."
+    ]
+  },
+  "readback": {
+    "_id": "d4738d67c23b46cde52ebbfe59713599",
+    "projectId": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+    "spanCount": 19,
+    "llmCalls": 8,
+    "toolCalls": 9,
+    "spans": [
+      {
+        "span_id": "d444817ec31d46bd",
+        "parent_span_id": null,
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.run",
+          "node_type": "workflow"
+        }
+      },
+      {
+        "span_id": "3a100ee80b49f9ab",
+        "parent_span_id": "d444817ec31d46bd",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.migration.V2",
+          "node_type": "workflow"
+        }
+      },
+      {
+        "span_id": "1eb4b0c13c2e8bb9",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "a5701e444e082851",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "inspect_service",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "475e07838e0e7c90",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "inspect_capabilities",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "be6f6bf953e2867b",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "bbf5c5dd32204a19",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "stage_config_change",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "faee8f46f93adec6",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "a2116da34e597be7",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "apply_candidate",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "9f1770c5b17baf60",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "9ea579da80c99fbd",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "restart_service",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "786e3e2f61cc534f",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "e04d8a454eddf792",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "probe_connection",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "fd2141816c3f6771",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "86f28f2951c9de90",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "check_application",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "0535273fd7d5774b",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "d135ef29479ff857",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "collect_evidence",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "9c5080eac55d840c",
+        "parent_span_id": "3a100ee80b49f9ab",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "c0d55b8d6ddf08c1",
+        "parent_span_id": "d444817ec31d46bd",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.rollback_and_reverify",
+          "node_type": "tool_call"
+        }
+      }
+    ]
+  }
+}

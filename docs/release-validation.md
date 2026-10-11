@@ -1,5 +1,13 @@
 # Release validation — October 11, 2026
 
+## October 12 follow-up
+
+The cloud application verification gap is now substantially closed: all seven original V1 traces and five original V2 traces pass structural coverage. Two original V2 traces remain partial; separate fresh V2 migration/no-op traces pass and are not substituted into the matched study. Every seeded scenario now has complete V2 application trace evidence, including failed-action recovery and matched V1/V2 infeasibility behavior. The new `trace-audit` command fails closed on partial or malformed readbacks. See `trace-audit.md` and `evidence/neatlogs-oct12-coverage.json`.
+
+Latest tooling source is `429769a`; migration semantics remain the evaluated `aa5777b` source. Unit validation now passes 207 tests plus 11 subtests, Ruff, and `pip check`. Fresh CI run `38166297502` also passes 207 unit tests and all 8 real Docker/TLS integration tests on this source. A new genuine Entire checkpoint is linked to the audit-development source commit. Gateway-reported total spend is $3.0659827, conservative local ledger $5.7158629, below the $10 authorization.
+
+This closes current reproducible sandbox tracing evidence, not every historical trace or an enterprise deployment assessment. The October 11 sections below are retained as dated evidence; their initial pending/failure observations are superseded by this follow-up where explicitly stated. Hosted optional authentication remains unverified. Submission/publication is still deferred.
+
 ## Release decision
 
 Invaris 0.1.0 is a validated, authorized TLS migration sandbox, not a production deployment platform. The agent, controller, independent verification, recovery, rollback, reports, budget ledger, and regression checks work in the owned fixture. Complete cloud tracing remains an open release gate. Do not represent every external integration as complete or deploy this agent to customer infrastructure.

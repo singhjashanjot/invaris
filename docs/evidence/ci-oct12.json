@@ -1,0 +1,21 @@
+{
+  "schema": "invaris.ci-validation/v1",
+  "checked_at": "2026-10-11T19:06:28.872Z",
+  "source_commit": "429769a206ce6b9618f1c1ea411aa3f2429be809",
+  "run_id": 38166297502,
+  "status": "completed",
+  "conclusion": "success",
+  "checks": {
+    "unit_tests_passed": 207,
+    "docker_tls_integration_tests_passed": 8,
+    "ruff": "passed"
+  },
+  "local_validation": {
+    "unit_tests_passed": 207,
+    "subtests_passed": 11,
+    "pip_check": "passed"
+  },
+  "limitations": [
+    "A fresh sandbox integration run, not production certification or native security audit."
+  ]
+}

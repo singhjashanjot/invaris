@@ -25,6 +25,10 @@ This checkpoint was captured after the implementation commit had already been pu
 
 Captured isolated transcripts were privately checked against configured secrets and key-shaped patterns with no matches. This is a targeted scan, not universal certification. Entire refs are local, not published hosted checkpoints.
 
+## October 12 trace-audit checkpoint
+
+Checkpoint `01M4P5F42NEWP4TDWNFHWZVR2R` captures the isolated audit-development worker and is linked by a genuine trailer to commit `429769a`. This new commit was amended before its first push; previously pushed history was not rewritten. Stored transcript verification found no configured credential matches. The main secret-bearing conversation was not captured. CLI wiring and later main-agent refinements are outside this checkpoint's full coverage. Metadata is in `docs/evidence/entire-oct12-checkpoint.json`; raw uploads remain disabled.
+
 ## Evidence limits and next steps
 
 The checkpoint records one session; it does not fabricate earlier development history or prove that all implementation changes were captured. The graph query and checkpoint are complementary local artifacts. Keep actual timestamps and distinguish local evidence from hosted sharing.

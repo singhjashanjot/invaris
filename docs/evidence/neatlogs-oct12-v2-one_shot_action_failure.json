@@ -1,0 +1,221 @@
+{
+  "run_id": "d3dc3d68-3c27-49d6-9ec8-8e48626b59ae",
+  "scenario": "one_shot_action_failure",
+  "trace_id": "6bd6c2c7541df830c3892f68c2bcaeac",
+  "original_final_study": true,
+  "http_status": 200,
+  "agent_status": "VERIFIED",
+  "evaluator_status": "VERIFIED",
+  "audit": {
+    "schema": "invaris.trace_audit.v1",
+    "complete": true,
+    "issues": [],
+    "observed_counts": {
+      "spans": 20,
+      "model_calls": 8,
+      "tool_calls": 10,
+      "rollback_and_reverify_tools": 1,
+      "reported_model_calls": 8,
+      "reported_tool_calls": 10
+    },
+    "expected_counts": {
+      "model_calls": 8,
+      "tool_calls": 10
+    },
+    "limitations": [
+      "This offline audit can only assess the supplied readback and local expected row.",
+      "Complete means structural count coverage and does not prove cryptographic authenticity.",
+      "HTTP success and SDK counters alone do not prove that a trace is complete.",
+      "The audit does not inspect or return model inputs, outputs, or credentials."
+    ]
+  },
+  "readback": {
+    "_id": "6bd6c2c7541df830c3892f68c2bcaeac",
+    "projectId": "2dfd398b-9874-4878-9a9a-d9fe62e6cdbe",
+    "spanCount": 20,
+    "llmCalls": 8,
+    "toolCalls": 10,
+    "spans": [
+      {
+        "span_id": "76a3f25998437dd5",
+        "parent_span_id": null,
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.run",
+          "node_type": "workflow"
+        }
+      },
+      {
+        "span_id": "bd2e227efcf056f2",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "8e4180fbf1fe1573",
+        "parent_span_id": "76a3f25998437dd5",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.migration.V2",
+          "node_type": "workflow"
+        }
+      },
+      {
+        "span_id": "11389598d01dd7d4",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "inspect_service",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "266506ea87188ff0",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "inspect_capabilities",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "a51eb42f23c66b57",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "1c019d8311f7b808",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "stage_config_change",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "a775855e62eb8b65",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "24d2b85472ad37a5",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "apply_candidate",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "dbe01c3a32a5d199",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "f4fd649bcd06658e",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "ERROR",
+        "span_metadata": {
+          "node_name": "restart_service",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "89ec4cc8f46aa780",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "17cef40df12e3c89",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "restart_service",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "4aba4df51701903f",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "62ac29eaf73e813c",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "probe_connection",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "3d53aa51fe8b7548",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "check_application",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "f311323babbf6e13",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "e5b9183e01ee1310",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "collect_evidence",
+          "node_type": "tool_call"
+        }
+      },
+      {
+        "span_id": "47c162250a7b07ff",
+        "parent_span_id": "8e4180fbf1fe1573",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "claude-haiku",
+          "node_type": "llm"
+        }
+      },
+      {
+        "span_id": "da3c7a5b9e206036",
+        "parent_span_id": "76a3f25998437dd5",
+        "status": "SUCCESS",
+        "span_metadata": {
+          "node_name": "invaris.rollback_and_reverify",
+          "node_type": "tool_call"
+        }
+      }
+    ]
+  }
+}
