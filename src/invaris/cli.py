@@ -243,6 +243,10 @@ def main(argv: list[str] | None = None) -> int:
     business.add_argument("--output", type=Path, default=Path("business/assumptions.json"))
     evidence_check = commands.add_parser("verify-bundle", help="Check artifact hashes; not authenticity or cryptographic correctness")
     evidence_check.add_argument("--directory", required=True, type=Path)
+    trace_audit = commands.add_parser("trace-audit", help="Compare actual cloud span coverage with a local run; no network or model calls")
+    trace_audit.add_argument("--expected", required=True, type=Path)
+    trace_audit.add_argument("--readback", required=True, type=Path)
+    trace_audit.add_argument("--project-id", required=True)
     cleanup = commands.add_parser("cleanup", help="Remove only the selected owned fixture")
     cleanup.add_argument("--delete-volumes", action="store_true", help="Delete owned test state/certificates")
     arguments = parser.parse_args(argv)
@@ -252,6 +256,13 @@ def main(argv: list[str] | None = None) -> int:
         arguments.artifacts = os.getenv("INVARIS_ARTIFACTS", "artifacts")
     tracing_started = False
     try:
+        if arguments.command == "trace-audit":
+            from .trace_audit import audit_trace_readback
+            expected = json.loads(arguments.expected.read_text(encoding="utf-8"))
+            readback = json.loads(arguments.readback.read_text(encoding="utf-8"))
+            audit = audit_trace_readback(expected, readback, project_id=arguments.project_id)
+            _json(audit)
+            return 0 if audit["complete"] else 1
         if arguments.command == "verify-bundle":
             manifest = json.loads((arguments.directory / "manifest.json").read_text(encoding="utf-8"))
             valid = isinstance(manifest, dict) and verify_manifest(arguments.directory, manifest)
