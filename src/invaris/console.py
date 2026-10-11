@@ -182,13 +182,21 @@ class ConsoleState:
     def integrations(self) -> list[dict]:
         index = _read_json(self.root / "docs/evidence/hackathon-proof-index.json")
         entries = index.get("integrations", []) if isinstance(index, dict) else []
-        if isinstance(entries, list) and len(entries) == 3:
-            return self.sanitize(entries)
-        return [
+        if not isinstance(entries, list) or len(entries) != 3:
+            entries = [
             {"id": "neatlogs", "name": "Neatlogs", "status": "verified-scoped", "headline": "Actual application traces verified", "detail": "Every scenario has structural cloud evidence. Two historical traces remain partial; fresh runs are separate. Public CLI OAuth is not claimed.", "evidence_paths": ["docs/evidence/neatlogs-oct12-coverage.json"]},
             {"id": "entire", "name": "Entire", "status": "verified-local", "headline": "Genuine checkpoints and Graph retrieval", "detail": "Local development context is captured and linked to source history. Hosted authentication and automatic hooks are not claimed.", "evidence_paths": ["docs/evidence/entire-oct12-checkpoint.json", "docs/evidence/entire-final-graph.json"]},
-            {"id": "cfo", "name": "cfo.ai", "status": "verified-artifact", "headline": "Generated business plan reviewed", "detail": "Six pages and 39 forecast months reviewed. Local inference reconciliation is not an API integration or update to the shared plan.", "evidence_paths": ["business/cfo-review.md", "business/final-measured-assumptions.json"]},
-        ]
+            {"id": "cfo", "name": "cfo.ai", "status": "local_reconciliation_only", "headline": "Local inference-cost reconciliation is available; shared business-plan review record is absent.", "detail": "Local inference reconciliation is not an API integration or update to the shared plan.", "evidence_paths": ["business/final-measured-assumptions.json"]},
+            ]
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            evidence = entry.get("evidence_paths", [])
+            entry["evidence_paths"] = [path for path in evidence if path in self.evidence_paths] if isinstance(evidence, list) else []
+            if entry.get("id") == "cfo" and not (self.root / "business/cfo-review.md").is_file():
+                entry["status"] = "local_reconciliation_only"
+                entry["headline"] = "Local inference-cost reconciliation is available; the shared business-plan review record is absent."
+        return self.sanitize(entries)
 
     def bootstrap(self) -> dict:
         summary = _read_json(self.root / "docs/evidence/final-study-summary.json")
@@ -350,7 +358,7 @@ class ConsoleHandler(BaseHTTPRequestHandler):
             else:
                 text = state.sanitize(candidate.read_text(encoding="utf-8"))
                 self._send(200, text.encode("utf-8"), "text/plain; charset=utf-8")
-        elif path in {"/app.js", "/styles.css"}:
+        elif path in {"/app.js", "/scene.js", "/styles.css", "/design.css"}:
             candidate = ASSETS / path.lstrip("/")
             if candidate.is_file():
                 content_type = "application/javascript" if candidate.suffix == ".js" else "text/css"

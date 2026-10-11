@@ -64,8 +64,6 @@
       "headline": "SDK verification is complete for seven original V1 and five original V2 cloud traces; two original V2 traces remain partial, two separate fresh V2 traces are complete, and the required dashboard link or screenshot is pending.",
       "detail": "OpenAI-client calls from the Python run/evaluate CLI are instrumented with Neatlogs SDK 1.4.26. Workflow, model, tool, error, and trace identity evidence is saved. The infeasible-policy comparison shows V1 VERIFIED versus evaluator BLOCKED (17 spans, 7 model, 8 tool) and V2 BLOCKED versus evaluator BLOCKED (5 spans, 1 model, 2 tool). A V2 recovery trace contains a restart_service ERROR followed by successful restart and rollback/reverify (20 spans, 8 model, 10 tool). This satisfies scoped SDK trace verification only; local JSON and trace IDs do not fulfill the official project-trace link/screenshot format. T3's app.neatlogs.com destination redirected to sign-in; no authenticated dashboard is available. A human with dashboard access must supply the permalink, screenshot, or official share link. Public CLI OAuth is unverified.",
       "evidence_paths": [
-        "docs/neatlogs-tracing.md",
-        "docs/trace-audit.md",
         "docs/evidence/neatlogs-oct12-coverage.json",
         "docs/evidence/neatlogs-oct12-v1-impossible_client_requirement.json",
         "docs/evidence/neatlogs-oct12-v2-impossible_client_requirement.json",
@@ -86,7 +84,6 @@
         "01M4P5F42NEWP4TDWNFHWZVR2R"
       ],
       "evidence_paths": [
-        "docs/entire-evidence.md",
         "docs/evidence/entire-oct12-checkpoint.json",
         "docs/evidence/entire-final-graph.json"
       ]
@@ -100,7 +97,6 @@
       "detail": "The user-shared plan assumes enterprise and midmarket three-month pilots of $60,000 and $25,000, ACVs of $240,000 and $90,000, and a hypothetical $1.5 million opening cash balance. It shows a $96,355 September 2028 minimum and 31.7 months starting runway. Final-study estimated inference is $0.05703594 per attempt and $0.0998129 per verified non-no-op migration across four migrations; these are estimates, not invoices or full delivery COGS. Revenue, customers, conversions, costs, and financing remain planning assumptions. The shared model still contains a $6 inference placeholder and a PENDING measured field. Browser review, not API/export or formula audit.",
       "share_url": "https://cfo.ai/s/aMAZiEnSXtphYplP",
       "evidence_paths": [
-        "business/cfo-review.md",
         "business/final-measured-assumptions.json",
         "business/measured-assumptions.json",
         "docs/evidence/final-study-summary.json"

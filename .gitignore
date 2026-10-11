@@ -17,3 +17,4 @@ artifacts/console/
 *.key
 *.pem
 .entire/tmp/
+*.[mM][dD]

@@ -103,6 +103,29 @@ def test_public_evidence_is_allowlisted(console):
     assert request(base, "/api/evidence/docs/evidence/proof.json")[2] == {"checked": True}
 
 
+def test_integrations_without_markdown_have_no_dangling_evidence_or_review_claim(state):
+    index_path = state.root / "docs/evidence/hackathon-proof-index.json"
+    index_path.write_text(json.dumps({"integrations": [
+        {"id": "neatlogs", "evidence_paths": ["docs/evidence/proof.json", "docs/trace-audit.md"]},
+        {"id": "entire", "evidence_paths": ["docs/evidence/proof.json"]},
+        {"id": "cfo", "status": "shared_plan_reviewed_local_reconciliation",
+         "headline": "Reviewed plan", "evidence_paths": ["business/cfo-review.md", "docs/evidence/proof.json"]},
+    ]}), encoding="utf-8")
+    integrations = state.integrations()
+    assert all(path in state.evidence_paths for item in integrations for path in item["evidence_paths"])
+    cfo = next(item for item in integrations if item["id"] == "cfo")
+    assert cfo["status"] == "local_reconciliation_only"
+    assert "review record is absent" in cfo["headline"]
+
+
+def test_local_markdown_evidence_remains_available(state):
+    review = state.root / "business/cfo-review.md"
+    review.parent.mkdir(parents=True)
+    review.write_text("Reviewed locally", encoding="utf-8")
+    state.evidence_paths = state._evidence_allowlist()
+    assert "business/cfo-review.md" in state.evidence_paths
+
+
 def test_rebinding_host_and_cross_site_bootstrap_are_rejected(console):
     _, base = console
     assert request(base, "/api/bootstrap", headers={"Host": "attacker.example"})[0] == 403
@@ -219,7 +242,8 @@ def test_fixture_setup_does_not_require_paid_model_consent(state, monkeypatch):
 def test_frontend_routes_and_assets_are_served_without_starting_jobs(console, state):
     _, base = console
     for path, content_type in (("/", "text/html"), ("/app/workflows", "text/html"),
-                               ("/app.js", "application/javascript"), ("/styles.css", "text/css")):
+                               ("/app.js", "application/javascript"), ("/scene.js", "application/javascript"),
+                               ("/styles.css", "text/css"), ("/design.css", "text/css")):
         with urllib.request.urlopen(base + path, timeout=3) as response:
             assert response.status == 200
             assert response.headers["Content-Type"].startswith(content_type)
